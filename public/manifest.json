@@ -1,0 +1,14 @@
+{
+    "name": "Flappy Space",
+    "short_name": "Flappy Space",
+    "icons": [
+        {
+            "src": "/android-chrome-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "#0a515d",
+    "background_color": "#0a515d",
+    "display": "standalone"
+}
