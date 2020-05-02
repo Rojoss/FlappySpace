@@ -64,11 +64,8 @@ export class Ship extends PIXI.Container {
 
         this.targetSpeed = 5 + GameUtils.lerp(8, 0, GameUtils.clamp01((this.velocity + 25) / 40));
         this.speed = GameUtils.lerp(this.speed, this.targetSpeed, 0.1);
-        this.x += this.speed;
-        // TODO: Remove this, Easier to just move the background
 
         if (this.y > RenderManager.Instance.stageHeight + this.height || this.y < -this.height) {
-            this.x = 300;
             this.y = RenderManager.Instance.stageHeight / 2;
         }
     }

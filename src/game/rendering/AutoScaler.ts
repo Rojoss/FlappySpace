@@ -52,12 +52,11 @@ export class AutoScaler {
         const width = window.innerWidth;
         const height = window.innerHeight;
 
-        RenderManager.Instance.stageWidth = width;
-        RenderManager.Instance.stageHeight = GameConstants.STAGE_HEIGHT;
-
         canvas.width = width;
         canvas.height = height;
         this.stage.app.renderer.resize(width, height);
         this.stage.scene.scale.set(scale);
+
+        RenderManager.Instance.setStageSize(width / scale, GameConstants.STAGE_HEIGHT);
     }
 }
