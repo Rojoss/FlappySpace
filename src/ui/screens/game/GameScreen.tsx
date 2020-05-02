@@ -1,15 +1,20 @@
 import * as React from 'react';
 import Screen from '../Screen';
+import { RenderManager } from '../../../game/rendering/RenderManager';
 
 export default class GameScreen extends React.Component<any, any> {
 
-    public componentWillMount(): void {
+    public componentDidMount(): void {
+        RenderManager.Instance.init();
+    }
 
+    public componentWillUnmount(): void {
+        RenderManager.Instance.destroy();
     }
 
     public render(): JSX.Element {
         return <Screen name={'game'}>
-            Game Screen
+            <canvas id='game-canvas' className='game-canvas' />
         </Screen>;
     }
 }
