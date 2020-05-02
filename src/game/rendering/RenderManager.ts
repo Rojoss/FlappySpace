@@ -1,11 +1,11 @@
 import { GameStage } from './GameStage';
 import { Ship } from '../ship/Ship';
 import { GameConstants } from '../GameConstants';
-import { Background } from '../background/Background';
 import { Levels } from '../../levels/Levels';
 import { ILevel } from '../../levels/ILevel';
 import { Planets } from '../planets/Planets';
 import { Stars } from '../background/Stars';
+import { Crystals } from '../crystals/Crystals';
 
 export class RenderManager {
 
@@ -18,6 +18,7 @@ export class RenderManager {
 
     public level!: ILevel;
 
+    public crystals!: Crystals;
     public planets!: Planets;
     public ship!: Ship;
     public stars!: Stars;
@@ -34,6 +35,7 @@ export class RenderManager {
 
         this.stage = new GameStage(this);
 
+        this.crystals = new Crystals(this.stage);
         this.planets = new Planets(this.stage);
         this.ship = new Ship(this.stage);
         this.stars = new Stars(this.stage);
@@ -45,8 +47,10 @@ export class RenderManager {
         if (!this.initialized) {
             return;
         }
+        this.stars.destroy();
         this.ship.destroy();
         this.planets.destroy();
+        this.crystals.destroy();
 
         this.initialized = false;
     }

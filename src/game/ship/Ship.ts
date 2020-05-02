@@ -72,6 +72,7 @@ export class Ship extends PIXI.Container {
             this.distance = 0;
             this.alive = true;
             this.targetSpeed = 6;
+            RenderManager.Instance.crystals.restart();
             RenderManager.Instance.planets.restart();
             return;
         }

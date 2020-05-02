@@ -171,15 +171,22 @@ export class Planets extends PIXI.Container {
 
         // Get the center point for the new planet
         const distanceFromLastPlanet = lastRadius + planetDistance + newRadius;
+        let dirX = 0;
+        let dirY = 0;
         if (newTop) {
-            const newX = lastPlanet.x + Math.cos(angle - (90 * Math.PI / 180)) * distanceFromLastPlanet;
-            const newY = lastPlanet.y + Math.sin(angle - (90 * Math.PI / 180)) * distanceFromLastPlanet;
-            this.addPlanet(newX, newY, newRadius, newTop);
+            dirX = Math.cos(angle - (90 * Math.PI / 180));
+            dirY = Math.sin(angle - (90 * Math.PI / 180));
         } else {
-            const newX = lastPlanet.x + Math.sin(angle) * distanceFromLastPlanet;
-            const newY = lastPlanet.y + Math.cos(angle) * distanceFromLastPlanet;
-            this.addPlanet(newX, newY, newRadius, newTop);
+            dirX = Math.sin(angle);
+            dirY = Math.cos(angle);
         }
+
+        const newX = lastPlanet.x + dirX * distanceFromLastPlanet;
+        const newY = lastPlanet.y + dirY * distanceFromLastPlanet;
+        this.addPlanet(newX, newY, newRadius, newTop);
+
+        const crystalDistance = lastRadius + (planetDistance / 2);
+        RenderManager.Instance.crystals.createCrystal(lastPlanet.x + dirX * crystalDistance, lastPlanet.y + dirY * crystalDistance);
 
         this.createPlanet();
     }

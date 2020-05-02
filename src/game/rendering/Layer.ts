@@ -8,6 +8,7 @@ export abstract class Layer {
 
     public static SHIP: number = 100;
 
+    public static CRYSTALS: number = 70;
 
     public static OBSTACLES: number = 50;
 
