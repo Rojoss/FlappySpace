@@ -3,11 +3,17 @@ import { GameStage } from '../rendering/GameStage';
 import { Layer } from '../rendering/Layer';
 import { RenderManager } from '../rendering/RenderManager';
 import { GameUtils } from '../utils/GameUtils';
+import { Color } from '../utils/Color';
 
 export class Planets extends PIXI.Container {
 
     private static readonly PLANET_TEXTURES: PIXI.Texture[] = [
-        PIXI.Texture.from('/assets/sprites/planet_1.png')
+        PIXI.Texture.from('/assets/sprites/planet_1.png'),
+        PIXI.Texture.from('/assets/sprites/planet_2.png'),
+        PIXI.Texture.from('/assets/sprites/planet_3.png'),
+        PIXI.Texture.from('/assets/sprites/planet_4.png'),
+        PIXI.Texture.from('/assets/sprites/planet_5.png'),
+        PIXI.Texture.from('/assets/sprites/planet_6.png'),
     ];
 
     private static readonly START_OFFSET: number = 1000;
@@ -185,7 +191,7 @@ export class Planets extends PIXI.Container {
             planet = this.planetPool[this.planetPool.length - 1];
             this.planetPool.splice(this.planetPool.length - 1);
         } else {
-            planet = new PIXI.Sprite(Planets.PLANET_TEXTURES[0]);
+            planet = new PIXI.Sprite(Planets.PLANET_TEXTURES[Math.floor(this.random() * Planets.PLANET_TEXTURES.length)]);
         }
 
         planet.x = x;
@@ -193,9 +199,15 @@ export class Planets extends PIXI.Container {
         planet.anchor.set(0.5);
         planet.width = radius * 2;
         planet.height = radius * 2;
-        planet.alpha = 0.8;
-        planet.blendMode = PIXI.BLEND_MODES.SCREEN;
+        planet.alpha = 1;
         planet.visible = true;
+        planet.rotation = Math.PI * 2;
+
+        const stageHeight = RenderManager.Instance.stageHeight;
+        const yPercentage = GameUtils.clamp(y, -100, stageHeight + 100) / (stageHeight + 200);
+        let clr = Color.lerp(parseInt(RenderManager.Instance.level.bgTopColor.substr(1), 16), parseInt(RenderManager.Instance.level.bgBottomClr.substr(1), 16), yPercentage);
+        clr = Color.lerp(clr, parseInt(RenderManager.Instance.level.planetBlendColor.substr(1), 16), 0.1 + this.random(3) * 0.4);
+        planet.tint = clr;
 
         (planet as any)['top'] = top;
 
