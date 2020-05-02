@@ -26,8 +26,8 @@ export class Background extends PIXI.Sprite {
     }
 
     public onStageResize(width: number, height: number): void {
-        this.width = width;
-        this.height = height;
+        this.width = window.innerWidth;
+        this.height = window.innerHeight;
     }
 
 }
