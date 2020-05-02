@@ -3,6 +3,7 @@ import { Layer } from '../rendering/Layer';
 import { GameStage } from '../rendering/GameStage';
 import { RenderManager } from '../rendering/RenderManager';
 import { GameUtils } from '../utils/GameUtils';
+import { ScreenShake } from '../effects/ScreenShake';
 
 export class Ship extends PIXI.Container {
 
@@ -85,6 +86,7 @@ export class Ship extends PIXI.Container {
         this.speed = 0;
         this.targetSpeed = 0;
         this.alive = false;
+        ScreenShake.shake(0.85, 60, 40);
     }
 
     public update(dt: number): void {

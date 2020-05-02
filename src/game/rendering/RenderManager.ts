@@ -5,6 +5,7 @@ import { Background } from '../background/Background';
 import { Levels } from '../../levels/Levels';
 import { ILevel } from '../../levels/ILevel';
 import { Planets } from '../planets/Planets';
+import { Stars } from '../background/Stars';
 
 export class RenderManager {
 
@@ -17,9 +18,9 @@ export class RenderManager {
 
     public level!: ILevel;
 
-    private background!: Background;
     public planets!: Planets;
     public ship!: Ship;
+    public stars!: Stars;
 
     public static get Instance(): RenderManager {
         if (RenderManager.INSTANCE === undefined) {
@@ -29,13 +30,13 @@ export class RenderManager {
     }
 
     public init(): void {
-        this.stage = new GameStage();
-
         this.level = Levels.get(1 + Math.floor(Math.random() * Levels.count));
 
-        this.background = new Background(this.stage, this.level.bgTopColor, this.level.bgBottomClr);
+        this.stage = new GameStage(this);
+
         this.planets = new Planets(this.stage);
         this.ship = new Ship(this.stage);
+        this.stars = new Stars(this.stage);
 
         this.initialized = true;
     }
@@ -46,7 +47,6 @@ export class RenderManager {
         }
         this.ship.destroy();
         this.planets.destroy();
-        this.background.destroy();
 
         this.initialized = false;
     }
@@ -58,7 +58,9 @@ export class RenderManager {
         if (!this.initialized) {
             return;
         }
-        this.background.onStageResize(width, height);
+
+        this.stage.setStageSize(width, height);
+        this.stars.onStageResize(width, height);
     }
 
 }

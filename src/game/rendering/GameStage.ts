@@ -1,6 +1,8 @@
 import * as PIXI from 'pixi.js';
 import { Layer } from './Layer';
 import { AutoScaler } from './AutoScaler';
+import { Background } from '../background/Background';
+import { RenderManager } from './RenderManager';
 
 export class GameStage {
 
@@ -9,24 +11,31 @@ export class GameStage {
 
     private layerMap!: ILayerMap;
 
+    private background!: Background;
+
     private updateMap: ITickerMap = {};
     private updateID: number = 0;
 
     public autoScaler!: AutoScaler;
 
-    constructor() {
+    constructor(rm: RenderManager) {
         const canvas = this.getCanvas();
         if (!canvas) {
             throw new Error(`Tried to initialize rendering stage but no canvas was found!`);
         }
         this.app = this.createApp(canvas);
 
+        this.createBackground(rm);
         this.createScene();
         this.createLayers();
 
         this.autoScaler = new AutoScaler(this);
 
         console.info('Render stage initialized!');
+    }
+
+    public setStageSize(width: number, height: number): void {
+        this.background.onStageResize(width, height);
     }
 
     public createApp(canvas: HTMLCanvasElement): PIXI.Application {
@@ -81,6 +90,11 @@ export class GameStage {
             this.layerMap[layer] = container;
             this.scene.addChild(container);
         }
+    }
+
+    private createBackground(rm: RenderManager): void {
+        this.background = new Background(this, rm.level.bgTopColor, rm.level.bgBottomClr);
+        this.app.stage.addChild(this.background);
     }
 
     public addToUpdate(callback: (delta: number) => void): number {
