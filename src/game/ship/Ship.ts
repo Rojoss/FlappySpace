@@ -6,10 +6,10 @@ import { GameUtils } from '../utils/GameUtils';
 
 export class Ship extends PIXI.Container {
 
-    private static readonly VELOCITY: number = 0.9;
-    private static readonly FFRICTION: number = 0.97;
-    private static readonly JUMP_FORCE: number = 25;
-    private static readonly MAX_UPWARDS_VELOCITY: number = 25;
+    private static readonly VELOCITY: number = 1.3;
+    private static readonly FFRICTION: number = 0.98;
+    private static readonly JUMP_FORCE: number = 40;
+    private static readonly MAX_UPWARDS_VELOCITY: number = 40;
 
     private jumpEvent: () => void;
     private updateID: number;
@@ -17,13 +17,15 @@ export class Ship extends PIXI.Container {
     private shipSprite!: PIXI.Sprite;
 
     private velocity: number = Ship.VELOCITY;
+    public speed: number = 0;
+    public targetSpeed: number = 0;
     private targetAngle: number = 0;
 
     constructor(stage: GameStage) {
         super();
 
-        this.x = 200;
-        this.y = stage.app.renderer.height / 2;
+        this.x = 300;
+        this.y = RenderManager.Instance.stageHeight / 2;
 
         this.initArt();
 
@@ -43,7 +45,7 @@ export class Ship extends PIXI.Container {
     private initArt(): void {
         this.shipSprite = new PIXI.Sprite(PIXI.Texture.from('/assets/sprites/ship.png'));
         this.shipSprite.anchor.set(0.5);
-        this.shipSprite.scale.set(0.5);
+        this.shipSprite.scale.set(1);
         this.addChild(this.shipSprite);
     }
 
@@ -57,13 +59,17 @@ export class Ship extends PIXI.Container {
         this.velocity *= Ship.FFRICTION;
         this.y += this.velocity;
 
-        // -25 = -5 & 20 = 45
-        this.targetAngle = GameUtils.lerp(45, 0, GameUtils.clamp01((this.velocity + 25) / 40));
+        this.targetAngle = GameUtils.lerp(30, 0, GameUtils.clamp01((this.velocity + 25) / 40));
         this.angle = GameUtils.lerp(this.angle, this.targetAngle, 0.1);
 
-        const stageHeight = RenderManager.Instance.stage.app.renderer.height;
-        if (this.y > stageHeight + this.height || this.y < -this.height) {
-            this.y = stageHeight / 2;
+        this.targetSpeed = 5 + GameUtils.lerp(8, 0, GameUtils.clamp01((this.velocity + 25) / 40));
+        this.speed = GameUtils.lerp(this.speed, this.targetSpeed, 0.1);
+        this.x += this.speed;
+        // TODO: Remove this, Easier to just move the background
+
+        if (this.y > RenderManager.Instance.stageHeight + this.height || this.y < -this.height) {
+            this.x = 300;
+            this.y = RenderManager.Instance.stageHeight / 2;
         }
     }
 

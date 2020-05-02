@@ -38,7 +38,7 @@ export class GameStage {
             backgroundColor: 0xffffff
         });
 
-        PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
+        // PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
         PIXI.settings.CAN_UPLOAD_SAME_BUFFER = false;
 
         app.renderer.plugins.interaction.destroy();

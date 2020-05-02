@@ -1,11 +1,14 @@
 import { GameStage } from './GameStage';
 import { Ship } from '../ship/Ship';
+import { GameConstants } from '../GameConstants';
 
 export class RenderManager {
 
     private static INSTANCE: RenderManager | undefined;
 
     public stage!: GameStage;
+    public stageWidth: number = window.innerWidth;
+    public stageHeight: number = GameConstants.STAGE_HEIGHT;
 
     private ship!: Ship;
 

@@ -1,4 +1,6 @@
 import { GameStage } from './GameStage';
+import { GameConstants } from '../GameConstants';
+import { RenderManager } from './RenderManager';
 
 export class AutoScaler {
 
@@ -43,11 +45,19 @@ export class AutoScaler {
             return;
         }
 
+        const windowHeight = window.innerHeight;
+        const desiredHeight = GameConstants.STAGE_HEIGHT;
+        const scale = windowHeight / desiredHeight;
+
         const width = window.innerWidth;
         const height = window.innerHeight;
+
+        RenderManager.Instance.stageWidth = width;
+        RenderManager.Instance.stageHeight = GameConstants.STAGE_HEIGHT;
 
         canvas.width = width;
         canvas.height = height;
         this.stage.app.renderer.resize(width, height);
+        this.stage.scene.scale.set(scale);
     }
 }
