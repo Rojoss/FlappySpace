@@ -10,8 +10,8 @@ export class Stars extends PIXI.Container {
     private static readonly MAX_SIZE: number = 7;
     private static readonly STARS_PER_1000PX: number = 50;
     private static readonly STAR_TEXTURE: PIXI.Texture = PIXI.Texture.from('/assets/sprites/star.png');
-    private static readonly STAR_OPACITY_MIN: number = 0.3;
-    private static readonly STAR_OPACITY_MAX: number = 0.5;
+    private static readonly STAR_OPACITY_MIN: number = 0.1;
+    private static readonly STAR_OPACITY_MAX: number = 0.4;
 
     private updateID: number;
 
@@ -51,7 +51,7 @@ export class Stars extends PIXI.Container {
             const star = this.stars[i];
 
             const sizeSpeedMultiplier = star.height / Stars.MAX_SIZE;
-            const speed = (ship.speed * 0.2) + (2 * sizeSpeedMultiplier) + (2 * star.alpha);
+            const speed = (ship.speed * 0.2) + (0.2 * sizeSpeedMultiplier);
             star.x -= speed;
 
             if (star.x + star.width < 0) {
