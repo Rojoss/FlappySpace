@@ -7,8 +7,14 @@ export class InputManager extends Gamecomponent {
     constructor(game: Game) {
         super(game);
 
-        this.mouseDownEvent = this.mouseDownEvent.bind(this);
-        window.addEventListener('mousedown', this.mouseDownEvent);
+        const useTouch = 'ontouchstart' in document.documentElement;
+        if (useTouch) {
+            this.touchStartEvent = this.touchStartEvent.bind(this);
+            window.addEventListener('touchstart', this.touchStartEvent);
+        } else {
+            this.mouseDownEvent = this.mouseDownEvent.bind(this);
+            window.addEventListener('mousedown', this.mouseDownEvent);
+        }
         this.keyDownEvent = this.keyDownEvent.bind(this);
         window.addEventListener('keydown', this.keyDownEvent);
     }
@@ -21,6 +27,10 @@ export class InputManager extends Gamecomponent {
     }
 
     private mouseDownEvent(): void {
+        this.handleMainAction();
+    }
+
+    private touchStartEvent(): void {
         this.handleMainAction();
     }
 
