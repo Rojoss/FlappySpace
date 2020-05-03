@@ -5,6 +5,7 @@ import { applyMiddleware, combineReducers, createStore, Reducer } from 'redux';
 import thunk from 'redux-thunk';
 import { history } from '../History';
 import { profileReducer, IProfileState } from './profile/ProfileReducer';
+import { gameReducer, IGameState } from './game/GameReducer';
 
 const actionTypeEnumToString = (action: any): any => typeof action.type === 'number' && ActionType[action.type] ? ({
     type: ActionType[action.type],
@@ -16,6 +17,7 @@ export const store = createStore(
     combineReducers({
         router: routerReducer,
         profile: profileReducer,
+        game: gameReducer,
     }),
     composeEnhancers(
         applyMiddleware(
@@ -28,6 +30,7 @@ export const store = createStore(
 export interface IRootState {
     router: Reducer<RouterState>;
     profile: IProfileState;
+    game: IGameState;
 }
 
 export function GetState(): IRootState {

@@ -2,44 +2,63 @@ import * as PIXI from 'pixi.js';
 import { Layer } from './Layer';
 import { AutoScaler } from './AutoScaler';
 import { Background } from '../background/Background';
-import { RenderManager } from './RenderManager';
+import { Game } from '../Game';
+import { Gamecomponent } from '../GameComponent';
+import { ILevel } from '../../levels/ILevel';
 
-export class GameStage {
+export class GameStage extends Gamecomponent {
 
-    public app!: PIXI.Application;
+    private _renderer!: PIXI.Renderer;
+    private _stage!: PIXI.Container;
+
     public scene!: PIXI.Container;
-
     private layerMap!: ILayerMap;
-
     private background!: Background;
-
-    private updateMap: ITickerMap = {};
-    private updateID: number = 0;
 
     public autoScaler!: AutoScaler;
 
-    constructor(rm: RenderManager) {
+    constructor(game: Game) {
+        super(game);
         const canvas = this.getCanvas();
         if (!canvas) {
             throw new Error(`Tried to initialize rendering stage but no canvas was found!`);
         }
-        this.app = this.createApp(canvas);
 
-        this.createBackground(rm);
+        this.createRenderer(canvas);
+        this.createStage();
+        this.autoScaler = new AutoScaler(game);
+
+        this.createBackground(game);
         this.createScene();
         this.createLayers();
-
-        this.autoScaler = new AutoScaler(this);
 
         console.info('Render stage initialized!');
     }
 
-    public setStageSize(width: number, height: number): void {
-        this.background.onStageResize(width, height);
+    public destroy(): void {
+        delete this.game;
     }
 
-    public createApp(canvas: HTMLCanvasElement): PIXI.Application {
-        const app = new PIXI.Application({
+    public onResize(width: number, height: number): void {
+        this.background.onResize(width, height);
+    }
+
+    public onLevelLoad(levelID: number, level: ILevel): void {
+        this.background.onLevelLoad(levelID, level);
+    }
+
+    public renderStage(): void {
+        this.renderer.render(this.stage);
+    }
+
+    public get renderer(): PIXI.Renderer {
+        return this._renderer;
+    }
+
+    private createRenderer(canvas: HTMLCanvasElement): PIXI.Renderer {
+        PIXI.settings.CAN_UPLOAD_SAME_BUFFER = false;
+
+        this._renderer = new PIXI.Renderer({
             width: window.innerWidth,
             height: window.innerHeight,
             view: canvas,
@@ -47,18 +66,25 @@ export class GameStage {
             backgroundColor: 0xffffff
         });
 
-        // PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
-        PIXI.settings.CAN_UPLOAD_SAME_BUFFER = false;
+        this._renderer.plugins.interaction.destroy();
+        this._renderer.plugins.accessibility.destroy();
+        this._renderer.plugins.extract.destroy();
+        this._renderer.plugins.prepare.destroy();
+        delete this._renderer.plugins.interaction;
+        delete this._renderer.plugins.accessibility;
+        delete this._renderer.plugins.extract;
+        delete this._renderer.plugins.prepare;
 
-        app.renderer.plugins.interaction.destroy();
-        app.renderer.plugins.accessibility.destroy();
-        app.renderer.plugins.extract.destroy();
-        app.renderer.plugins.prepare.destroy();
-        delete app.renderer.plugins.interaction;
-        delete app.renderer.plugins.accessibility;
-        delete app.renderer.plugins.extract;
-        delete app.renderer.plugins.prepare;
-        return app;
+        return this._renderer;
+    }
+
+    public get stage(): PIXI.Container {
+        return this._stage;
+    }
+
+    private createStage(): void {
+        this._stage = new PIXI.Container();
+        this._stage.name = 'Game Stage';
     }
 
     public getCanvas(): HTMLCanvasElement | undefined {
@@ -68,7 +94,7 @@ export class GameStage {
     private createScene(): void {
         this.scene = new PIXI.Container;
         this.scene.name = 'Game Scene';
-        this.app.stage.addChild(this.scene);
+        this.stage.addChild(this.scene);
     }
 
     private createLayers(): void {
@@ -92,27 +118,9 @@ export class GameStage {
         }
     }
 
-    private createBackground(rm: RenderManager): void {
-        this.background = new Background(this, rm.level.bgTopColor, rm.level.bgBottomClr);
-        this.app.stage.addChild(this.background);
-    }
-
-    public addToUpdate(callback: (delta: number) => void): number {
-        const id = this.updateID++;
-        const timeFunc = (dt: number) => {
-            callback(dt / 60);
-        };
-        this.updateMap[id] = timeFunc;
-        this.app && this.app.ticker.add(timeFunc);
-        return id;
-    }
-
-    public removeFromUpdate(id: number): void {
-        const fn = this.updateMap[id];
-        if (fn !== undefined) {
-            this.app && this.app.ticker.remove(fn);
-        }
-        delete this.updateMap[id];
+    private createBackground(game: Game): void {
+        this.background = new Background(this, game.level.bgTopColor, game.level.bgBottomClr);
+        this.stage.addChild(this.background);
     }
 
     public addToScene(layer: number, obj: PIXI.DisplayObject, addToBack?: boolean): void {
@@ -134,16 +142,8 @@ export class GameStage {
     public getLayerContainer(layer: number): PIXI.Container {
         return this.layerMap[layer];
     }
-
-    public getScreen(): PIXI.Rectangle {
-        return this.app.screen;
-    }
 }
 
 interface ILayerMap {
     [layer: number]: PIXI.Container;
-}
-
-interface ITickerMap {
-    [id: number]: (dt: number) => void;
 }

@@ -1,9 +1,9 @@
 import { ActionType } from '../../actions/ActionType';
 import { IAction } from '../../actions/IAction';
 
-export const setLevelAction = (payload: ISetLevelActionPayload): IAction<ISetLevelActionPayload> => ({
-    type: ActionType.SET_LEVEL,
+export const setUnlockedLevelsAction = (payload: ISetUnlockedLevelsActionPayload): IAction<ISetUnlockedLevelsActionPayload> => ({
+    type: ActionType.SET_UNLOCKED_LEVELS,
     payload
 });
 
-export type ISetLevelActionPayload = number;
+export type ISetUnlockedLevelsActionPayload = number;

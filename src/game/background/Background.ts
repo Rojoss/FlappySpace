@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js';
 import { GameStage } from '../rendering/GameStage';
+import { ILevel } from '../../levels/ILevel';
 
 export class Background extends PIXI.Sprite {
 
@@ -7,6 +8,12 @@ export class Background extends PIXI.Sprite {
         const gradientTexture = Background.generateGradientTexture(colorTop, colorBottom);
         gradientTexture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
         super(gradientTexture);
+    }
+
+    public onLevelLoad(levelID: number, level: ILevel): void {
+        const gradientTexture = Background.generateGradientTexture(level.bgTopColor, level.bgBottomClr);
+        gradientTexture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
+        this.texture = gradientTexture;
     }
 
     private static generateGradientTexture(colorTop: string, colorBottom: string): PIXI.Texture {
@@ -25,7 +32,7 @@ export class Background extends PIXI.Sprite {
         return PIXI.Texture.from(c);
     }
 
-    public onStageResize(width: number, height: number): void {
+    public onResize(width: number, height: number): void {
         this.width = window.innerWidth;
         this.height = window.innerHeight;
     }

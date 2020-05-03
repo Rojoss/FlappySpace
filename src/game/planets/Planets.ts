@@ -1,13 +1,14 @@
 import * as PIXI from 'pixi.js';
-import { GameStage } from '../rendering/GameStage';
 import { Layer } from '../rendering/Layer';
-import { RenderManager } from '../rendering/RenderManager';
 import { GameUtils } from '../utils/GameUtils';
 import { Color } from '../utils/Color';
 import { EaseMode } from '../animation/Ease';
 import { Animation } from '../animation/Animation';
+import { Game } from '../Game';
+import { IUpdateable } from '../GameLoop';
+import { GameState } from '../GameState';
 
-export class Planets extends PIXI.Container {
+export class Planets extends PIXI.Container implements IUpdateable {
 
     private static readonly PLANET_TEXTURES: PIXI.Texture[] = [
         PIXI.Texture.from('/assets/sprites/planet_1.png'),
@@ -30,7 +31,8 @@ export class Planets extends PIXI.Container {
 
     private static readonly MAX_OFFSCREEN_Y: number = 200;
 
-    private updateID: number;
+    private game: Game;
+    public updateID: number;
     private prevShipDistance: number | undefined;
 
     private seed: number;
@@ -39,21 +41,30 @@ export class Planets extends PIXI.Container {
     private planets: PIXI.Sprite[] = [];
     private planetPool: PIXI.Sprite[] = [];
 
-    constructor(stage: GameStage) {
+    constructor(game: Game) {
         super();
-        this.updateID = stage.addToUpdate(this.update.bind(this));
+        this.game = game;
 
-        this.seed = RenderManager.Instance.level.planetSeed;
-        stage.addToScene(Layer.OBSTACLES, this);
+        this.updateID = game.loop.addToUpdate(this);
+        this.seed = game.level.planetSeed;
+        game.stage.addToScene(Layer.OBSTACLES, this);
     }
 
     public destroy(): void {
+        this.game.loop.removeFromUpdate(this.updateID);
+        delete this.game;
         super.destroy();
-        RenderManager.Instance.stage.removeFromUpdate(this.updateID);
     }
 
-    public update(): void {
-        const ship = RenderManager.Instance.ship;
+    public onStateChange(prevState: GameState, state: GameState): void {
+        if (state === GameState.PRE_GAME) {
+            console.log('RESET Planets');
+            this.restart();
+        }
+    }
+
+    public update(timeElapsed: number): void {
+        const ship = this.game.renderManager.ship;
         this.createPlanets();
 
         for (let i = this.planets.length - 1; i >= 0; i--) {
@@ -107,8 +118,8 @@ export class Planets extends PIXI.Container {
     }
 
     private createPlanets(): void {
-        const ship = RenderManager.Instance.ship;
-        if (!ship || !ship.alive || this.prevShipDistance === ship.distance || this.planetCount >= Planets.PLANETS_PER_LEVEL) {
+        const ship = this.game.renderManager.ship;
+        if (!ship || this.prevShipDistance === ship.distance || this.planetCount >= Planets.PLANETS_PER_LEVEL) {
             return;
         }
 
@@ -126,13 +137,11 @@ export class Planets extends PIXI.Container {
         }
         const lastPlanet = this.planets.length > 0 ? this.planets[this.planets.length - 1] : undefined;
 
-        const stageWidth = RenderManager.Instance.stageWidth;
+        const stageWidth = this.game.width;
+        const stageHeight = this.game.height;
         if (lastPlanet !== undefined && lastPlanet.x > stageWidth + Planets.OFFSCREEN_BUFFER) {
             return;
         }
-
-        const stageHeight = RenderManager.Instance.stageHeight;
-
 
         // Create a random planet first
         const radius = Planets.MIN_PLANET_SIZE + (this.random(1) * (Planets.MAX_PLANET_SIZE - Planets.MIN_PLANET_SIZE));
@@ -145,8 +154,8 @@ export class Planets extends PIXI.Container {
             y = stageHeight + Planets.MAX_OFFSCREEN_Y - (this.random(2) * Planets.MAX_PLANET_SIZE);
         }
         if (lastPlanet) {
-            const minPlanetDistance = RenderManager.Instance.level.minPlanetDistance;
-            const maxPlanetDistance = RenderManager.Instance.level.maxPlanetDistance;
+            const minPlanetDistance = this.game.level.minPlanetDistance;
+            const maxPlanetDistance = this.game.level.maxPlanetDistance;
             const planetDistance = minPlanetDistance + (this.random(3) * (maxPlanetDistance - minPlanetDistance));
             this.addPlanet(lastPlanet.x + (lastPlanet.width / 2) + radius + planetDistance, y, radius, top);
         } else {
@@ -160,13 +169,13 @@ export class Planets extends PIXI.Container {
         if (this.planetCount >= Planets.PLANETS_PER_LEVEL) {
             return;
         }
-        const stageHeight = RenderManager.Instance.stageHeight;
+        const stageHeight = this.game.height;
 
         const lastPlanet = this.planets[this.planets.length - 1];
         const lastPlanetTop: boolean = lastPlanet ? (lastPlanet as any)['top'] : false;
 
-        const minPlanetDistance = RenderManager.Instance.level.minPlanetDistance;
-        const maxPlanetDistance = RenderManager.Instance.level.maxPlanetDistance;
+        const minPlanetDistance = this.game.level.minPlanetDistance;
+        const maxPlanetDistance = this.game.level.maxPlanetDistance;
 
         // First pick a random distance the planet will be offset from the previous one
         const planetDistance = minPlanetDistance + (this.random(2) * (maxPlanetDistance - minPlanetDistance));
@@ -205,7 +214,7 @@ export class Planets extends PIXI.Container {
         this.addPlanet(newX, newY, newRadius, newTop);
 
         const crystalDistance = lastRadius + (planetDistance / 2);
-        RenderManager.Instance.crystals.createCrystal(lastPlanet.x + dirX * crystalDistance, lastPlanet.y + dirY * crystalDistance);
+        this.game.renderManager.crystals.createCrystal(lastPlanet.x + dirX * crystalDistance, lastPlanet.y + dirY * crystalDistance);
 
         this.createPlanet();
     }
@@ -229,10 +238,10 @@ export class Planets extends PIXI.Container {
         planet.visible = true;
         planet.rotation = Math.PI * 2;
 
-        const stageHeight = RenderManager.Instance.stageHeight;
+        const stageHeight = this.game.height;
         const yPercentage = GameUtils.clamp(y, -100, stageHeight + 100) / (stageHeight + 200);
-        let clr = Color.lerp(parseInt(RenderManager.Instance.level.bgTopColor.substr(1), 16), parseInt(RenderManager.Instance.level.bgBottomClr.substr(1), 16), yPercentage);
-        clr = Color.lerp(clr, parseInt(RenderManager.Instance.level.planetBlendColor.substr(1), 16), 0.1 + this.random(3) * 0.4);
+        let clr = Color.lerp(parseInt(this.game.level.bgTopColor.substr(1), 16), parseInt(this.game.level.bgBottomClr.substr(1), 16), yPercentage);
+        clr = Color.lerp(clr, parseInt(this.game.level.planetBlendColor.substr(1), 16), 0.1 + this.random(3) * 0.4);
         planet.tint = clr;
 
         (planet as any)['top'] = top;

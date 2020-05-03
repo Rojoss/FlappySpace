@@ -1,30 +1,43 @@
 import * as PIXI from 'pixi.js';
-import { GameStage } from '../rendering/GameStage';
 import { Layer } from '../rendering/Layer';
-import { RenderManager } from '../rendering/RenderManager';
 import { EaseMode } from '../animation/Ease';
 import { Animation } from '../animation/Animation';
 import { GameUtils } from '../utils/GameUtils';
+import { Game } from '../Game';
+import { IUpdateable } from '../GameLoop';
+import { store } from '../../ui/react/store/Store';
+import { addCrystal } from '../../ui/react/store/game/GameActions';
+import { GameState } from '../GameState';
 
-export class Crystals extends PIXI.Container {
+export class Crystals extends PIXI.Container implements IUpdateable {
 
     private static readonly TEXTURE: PIXI.Texture = PIXI.Texture.from('/assets/sprites/crystal.png');
 
-    private updateID: number;
+    private game: Game;
+    public updateID: number;
 
     private crystals: PIXI.Sprite[] = [];
     private pooledCrystals: PIXI.Sprite[] = [];
 
-    constructor(stage: GameStage) {
+    constructor(game: Game) {
         super();
-        this.updateID = stage.addToUpdate(this.update.bind(this));
+        this.game = game;
 
-        stage.addToScene(Layer.CRYSTALS, this);
+        this.updateID = game.loop.addToUpdate(this);
+        game.stage.addToScene(Layer.CRYSTALS, this);
     }
 
     public destroy(): void {
+        this.game.loop.removeFromUpdate(this.updateID);
+        delete this.game;
         super.destroy();
-        RenderManager.Instance.stage.removeFromUpdate(this.updateID);
+    }
+
+    public onStateChange(prevState: GameState, state: GameState): void {
+        if (state === GameState.PRE_GAME) {
+            console.log('RESET Crystals');
+            this.restart();
+        }
     }
 
     public restart(): void {
@@ -33,8 +46,8 @@ export class Crystals extends PIXI.Container {
         }
     }
 
-    private update(): void {
-        const ship = RenderManager.Instance.ship;
+    public update(dt: number): void {
+        const ship = this.game.renderManager.ship;
 
         for (let i = this.crystals.length - 1; i >= 0; i--) {
             const crystal = this.crystals[i];
@@ -95,6 +108,7 @@ export class Crystals extends PIXI.Container {
             return false;
         };
         bounceAnim.start(Math.random() * 500);
+        (crystal as any)['bounceAnim'] = bounceAnim;
 
     }
 
@@ -111,6 +125,8 @@ export class Crystals extends PIXI.Container {
             }
         };
         anim.start();
+
+        store.dispatch(addCrystal());
     }
 
     public missedCrystal(crystal: PIXI.Sprite, index: number): void {
@@ -121,6 +137,8 @@ export class Crystals extends PIXI.Container {
         crystal.visible = false;
         this.crystals.splice(index !== undefined ? index : this.crystals.indexOf(crystal), 1);
         this.pooledCrystals.push(crystal);
+        (crystal as any)['bounceAnim'].stop();
+        (crystal as any)['bounceAnim'] = undefined;
     }
 
 }

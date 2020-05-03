@@ -10,6 +10,7 @@ export abstract class Layer {
 
     public static CRYSTALS: number = 70;
 
+    public static BROKEN_SHIPS: number = 55;
     public static OBSTACLES: number = 50;
 
 

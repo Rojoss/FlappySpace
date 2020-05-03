@@ -1,5 +1,6 @@
 export interface ILevel {
     name: string;
+
     bgTopColor: string;
     bgBottomClr: string;
     planetBlendColor: string;

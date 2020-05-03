@@ -7,12 +7,12 @@ export interface IProfileState extends IProfile { }
 
 export function getInitialState(): IProfileState {
     return {
-        level: 1
+        unlockedLevels: 1
     };
 }
 
 const handlers: { [index: number]: any } = {
-    [ActionType.SET_LEVEL]: mutator._setLevel,
+    [ActionType.SET_UNLOCKED_LEVELS]: mutator._setUnlockedLevels,
 };
 
 export function profileReducer(state: IProfileState = getInitialState(), action: IAction<any>): IProfileState {

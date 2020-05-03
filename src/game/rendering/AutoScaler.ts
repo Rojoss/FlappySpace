@@ -1,18 +1,16 @@
-import { GameStage } from './GameStage';
 import { GameConstants } from '../GameConstants';
-import { RenderManager } from './RenderManager';
+import { Game } from '../Game';
 
 export class AutoScaler {
 
-    private stage: GameStage;
+    private game: Game;
 
     private timeoutHandler!: number;
     private boundDebouncedResizeHandler: any;
 
-    constructor(stage: GameStage) {
-        this.stage = stage;
+    constructor(game: Game) {
+        this.game = game;
 
-        this.onResize();
         window.setTimeout(() => {
             this.onResize();
         }, 1);
@@ -31,6 +29,8 @@ export class AutoScaler {
     public destroy(): void {
         window.removeEventListener('resize', this.boundDebouncedResizeHandler);
         window.clearTimeout(this.timeoutHandler);
+
+        delete this.game;
     }
 
     public onResize(): void {
@@ -39,7 +39,7 @@ export class AutoScaler {
     }
 
     private scale(): void {
-        const canvas = this.stage.getCanvas();
+        const canvas = this.game.stage.getCanvas();
         if (!canvas) {
             console.warn('Unable to scale the game because there is no canvas..');
             return;
@@ -54,9 +54,9 @@ export class AutoScaler {
 
         canvas.width = width;
         canvas.height = height;
-        this.stage.app.renderer.resize(width, height);
-        this.stage.scene.scale.set(scale);
+        this.game.stage.renderer.resize(width, height);
+        this.game.stage.scene.scale.set(scale);
 
-        RenderManager.Instance.setStageSize(width / scale, GameConstants.STAGE_HEIGHT);
+        this.game.onResize(width / scale, GameConstants.STAGE_HEIGHT);
     }
 }

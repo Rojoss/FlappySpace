@@ -1,75 +1,55 @@
-import { GameStage } from './GameStage';
 import { Ship } from '../ship/Ship';
-import { GameConstants } from '../GameConstants';
-import { Levels } from '../../levels/Levels';
-import { ILevel } from '../../levels/ILevel';
 import { Planets } from '../planets/Planets';
 import { Stars } from '../background/Stars';
 import { Crystals } from '../crystals/Crystals';
-import { AnimationManager } from '../animation/AnimationManager';
+import { ScreenFlash } from '../effects/ScreenFlash';
+import { Game } from '../Game';
+import { ScreenShake } from '../effects/ScreenShake';
+import { Gamecomponent } from '../GameComponent';
+import { GameState } from '../GameState';
 
-export class RenderManager {
-
-    private static INSTANCE: RenderManager | undefined;
-
-    public initialized: boolean = false;
-    public stage!: GameStage;
-    public stageWidth: number = window.innerWidth;
-    public stageHeight: number = GameConstants.STAGE_HEIGHT;
-
-    public level!: ILevel;
-
-    public animManager!: AnimationManager;
+export class RenderManager extends Gamecomponent {
 
     public crystals!: Crystals;
     public planets!: Planets;
     public ship!: Ship;
     public stars!: Stars;
 
-    public static get Instance(): RenderManager {
-        if (RenderManager.INSTANCE === undefined) {
-            RenderManager.INSTANCE = new RenderManager();
-        }
-        return RenderManager.INSTANCE;
-    }
+    public flashEffect!: ScreenFlash;
+    public shakeEffect!: ScreenShake;
 
-    public init(): void {
-        this.level = Levels.get(1 + Math.floor(Math.random() * Levels.count));
+    public constructor(game: Game) {
+        super(game);
 
-        this.stage = new GameStage(this);
+        this.crystals = new Crystals(game);
+        this.planets = new Planets(game);
+        this.ship = new Ship(game);
+        this.stars = new Stars(game);
 
-        this.animManager = new AnimationManager(this.stage);
-        this.crystals = new Crystals(this.stage);
-        this.planets = new Planets(this.stage);
-        this.ship = new Ship(this.stage);
-        this.stars = new Stars(this.stage);
-
-        this.initialized = true;
+        this.flashEffect = new ScreenFlash(game);
+        this.shakeEffect = new ScreenShake(game);
     }
 
     public destroy(): void {
-        if (!this.initialized) {
-            return;
-        }
         this.stars.destroy();
         this.ship.destroy();
         this.planets.destroy();
         this.crystals.destroy();
-        this.animManager.destroy();
+        this.flashEffect.destroy();
+        this.shakeEffect.destroy();
 
-        this.initialized = false;
+        delete this.game;
     }
 
-    public setStageSize(width: number, height: number): void {
-        this.stageWidth = width;
-        this.stageHeight = height;
-
-        if (!this.initialized) {
-            return;
-        }
-
-        this.stage.setStageSize(width, height);
+    public onResize(width: number, height: number): void {
         this.stars.onStageResize(width, height);
+        this.flashEffect.onStageResize(width, height);
+    }
+
+    public onStateChange(prevState: GameState, state: GameState): void {
+        this.crystals.onStateChange(prevState, state);
+        this.planets.onStateChange(prevState, state);
+        this.ship.onStateChange(prevState, state);
     }
 
 }

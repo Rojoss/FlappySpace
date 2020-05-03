@@ -1,0 +1,61 @@
+.hud {
+    position: absolute;
+    user-select: none;
+    pointer-events: none;
+    width: 100%;
+
+    .level {
+        position: absolute;
+        left: 50%;
+        top: 10px;
+        transform: translateX(-50%);
+        font-variant: all-small-caps;
+        .font-title-black;
+        font-size: 45px;
+        color: rgba(255,255,255,0.7);
+    }
+
+    .time {
+        position: absolute;
+        left: 50%;
+        top: 55px;
+        transform: translateX(-50%);
+        font-variant: all-small-caps;
+        .font-title-semibold;
+        font-size: 22px;
+        color: rgba(255,255,255,0.5);
+    }
+
+    .crystals {
+        position: absolute;
+        top: 25px;
+        left: 30px;
+        display: flex;
+        align-items: center;
+        justify-items: center;
+
+        .crystal {
+            width: 42px;
+        }
+
+        .value {
+            margin-left: 15px;
+            font-size: 20px;
+            .font-title-medium;
+            color: @c-white;
+            display: flex;
+            align-items: center;
+            justify-items: center;
+
+            .divider {
+                padding: 0 1px;
+                font-size: 30px;
+                color: @c-gray;
+            }
+
+            .current {
+                color: #fac5ff;
+            }
+        }
+    }
+}

@@ -1,10 +1,10 @@
 import * as PIXI from 'pixi.js';
-import { GameStage } from '../rendering/GameStage';
-import { RenderManager } from '../rendering/RenderManager';
 import { GameUtils } from '../utils/GameUtils';
 import { Layer } from '../rendering/Layer';
+import { Game } from '../Game';
+import { IUpdateable } from '../GameLoop';
 
-export class Stars extends PIXI.Container {
+export class Stars extends PIXI.Container implements IUpdateable {
 
     private static readonly MIN_SIZE: number = 0.5;
     private static readonly MAX_SIZE: number = 7;
@@ -13,19 +13,22 @@ export class Stars extends PIXI.Container {
     private static readonly STAR_OPACITY_MIN: number = 0.1;
     private static readonly STAR_OPACITY_MAX: number = 0.4;
 
-    private updateID: number;
+    private game: Game;
+    public updateID: number;
 
     private stars: PIXI.Sprite[] = [];
 
-    constructor(stage: GameStage) {
+    constructor(game: Game) {
         super();
+        this.game = game;
 
-        this.updateID = stage.addToUpdate(this.update.bind(this));
-        stage.addToScene(Layer.BACKGROUND_AMBIENT, this);
+        this.updateID = game.loop.addToUpdate(this);
+        game.stage.addToScene(Layer.BACKGROUND_AMBIENT, this);
     }
 
     public destroy(): void {
-        RenderManager.Instance.stage.removeFromUpdate(this.updateID);
+        this.game.loop.removeFromUpdate(this.updateID);
+        delete this.game;
         super.destroy();
     }
 
@@ -44,19 +47,19 @@ export class Stars extends PIXI.Container {
         }
     }
 
-    private update(dt: number): void {
-        const ship = RenderManager.Instance.ship;
+    public update(dt: number): void {
+        const ship = this.game.renderManager.ship;
 
         for (let i = this.stars.length - 1; i >= 0; i--) {
             const star = this.stars[i];
 
             const sizeSpeedMultiplier = star.height / Stars.MAX_SIZE;
-            const speed = (ship.speed * 0.2) + (0.2 * sizeSpeedMultiplier);
+            const speed = (ship.speed * 0.3) + (0.5 * sizeSpeedMultiplier);
             star.x -= speed;
 
             if (star.x + star.width < 0) {
                 this.setRandomStarSize(star);
-                star.x = RenderManager.Instance.stageWidth + star.width;
+                star.x = this.game.width + star.width;
             }
         }
     }
@@ -64,8 +67,8 @@ export class Stars extends PIXI.Container {
     private createStar(initial: boolean): void {
         const star = new PIXI.Sprite(Stars.STAR_TEXTURE);
         this.setRandomStarSize(star);
-        star.x = initial ? Math.random() * RenderManager.Instance.stageWidth : RenderManager.Instance.stageWidth;
-        star.y = Math.random() * RenderManager.Instance.stageHeight;
+        star.x = initial ? Math.random() * this.game.width : this.game.width;
+        star.y = Math.random() * this.game.height;
         this.stars.push(star);
         this.addChild(star);
     }

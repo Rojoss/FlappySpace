@@ -1,39 +1,54 @@
-import { RenderManager } from '../rendering/RenderManager';
 import { GameUtils } from '../utils/GameUtils';
+import { Game } from '../Game';
+import { IUpdateable } from '../GameLoop';
 
-export class ScreenShake {
+export class ScreenShake implements IUpdateable {
 
-    private static updateID: number | undefined;
+    private game: Game;
+    public updateID!: number;
 
-    private static strength: number;
-    private static shakeX: number;
-    private static shakeY: number;
+    private strength: number = 0;
+    private shakeX: number = 0;
+    private shakeY: number = 0;
 
-    public static shake(strength: number = 0.9, shakeX: number = 100, shakeY: number = shakeX): void {
+    public constructor(game: Game) {
+        this.game = game;
+    }
+
+    public destroy(): void {
+        this.reset();
+        delete this.game;
+    }
+
+    public shake(strength: number = 0.9, shakeX: number = 100, shakeY: number = shakeX): void {
         if (this.updateID) {
             return;
         }
-        ScreenShake.updateID = RenderManager.Instance.stage.addToUpdate(ScreenShake.update);
-        ScreenShake.strength = GameUtils.clamp01(strength);
-        ScreenShake.shakeX = shakeX;
-        ScreenShake.shakeY = shakeY;
+        this.updateID = this.game.loop.addToUpdate(this);
+        this.strength = GameUtils.clamp01(strength);
+        this.shakeX = shakeX;
+        this.shakeY = shakeY;
     }
 
-    private static update(): void {
-        if (!ScreenShake.updateID) {
+    private reset(): void {
+        this.game.loop.removeFromUpdate(this.updateID);
+        this.game.stage.scene.x = 0;
+        this.game.stage.scene.y = 0;
+        delete this.updateID;
+    }
+
+    public update(dt: number): void {
+        if (!this.updateID) {
             return;
         }
 
-        RenderManager.Instance.stage.scene.x = -(ScreenShake.shakeX / 2) + (Math.random() * ScreenShake.shakeX);
-        RenderManager.Instance.stage.scene.y = -(ScreenShake.shakeY / 2) + (Math.random() * ScreenShake.shakeY);
-        ScreenShake.shakeX *= ScreenShake.strength;
-        ScreenShake.shakeY *= ScreenShake.strength;
+        this.game.stage.scene.x = -(this.shakeX / 2) + (Math.random() * this.shakeX);
+        this.game.stage.scene.y = -(this.shakeY / 2) + (Math.random() * this.shakeY);
+        this.shakeX *= this.strength;
+        this.shakeY *= this.strength;
 
-        if (ScreenShake.shakeX < 0.5 && ScreenShake.shakeY < 0.5) {
-            RenderManager.Instance.stage.removeFromUpdate(ScreenShake.updateID);
-            RenderManager.Instance.stage.scene.x = 0;
-            RenderManager.Instance.stage.scene.y = 0;
-            ScreenShake.updateID = undefined;
+        if (this.shakeX < 0.5 && this.shakeY < 0.5) {
+            this.reset();
         }
     }
 

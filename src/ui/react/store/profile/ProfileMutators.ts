@@ -1,9 +1,9 @@
 import { IProfileState } from './ProfileReducer';
-import { ISetLevelActionPayload } from './ProfileActions';
+import { ISetUnlockedLevelsActionPayload } from './ProfileActions';
 
-export const _setLevel = (state: IProfileState, payload: ISetLevelActionPayload): IProfileState => {
+export const _setUnlockedLevels = (state: IProfileState, payload: ISetUnlockedLevelsActionPayload): IProfileState => {
     return {
         ...state,
-        level: payload
+        unlockedLevels: payload
     };
 };

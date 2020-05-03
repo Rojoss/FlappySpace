@@ -1,7 +1,7 @@
 import * as PIXI from 'pixi.js';
-import { RenderManager } from '../rendering/RenderManager';
 import { EaseMode, Ease } from './Ease';
 import { GameUtils } from '../utils/GameUtils';
+import { Game } from '../Game';
 
 export type AnimationTarget = PIXI.Sprite | PIXI.Graphics;
 
@@ -42,17 +42,20 @@ export class Animation {
         this.setDuration(duration);
     }
 
-    public onUnregistration(): void {
+    public onUnregistration(fromReset: boolean): void {
         this.startTime = undefined;
-        this.onStopped && this.onStopped(Date.now());
-        this.onReset && this.onReset(Date.now());
+        this.id = undefined;
+        if (!fromReset) {
+            this.onStopped && this.onStopped(Date.now());
+            this.reset();
+        }
     }
 
     // ---
 
     public start(delay: number = 0, changeDirection: boolean = false): Animation {
         if (!this.id) {
-            this.id = RenderManager.Instance.animManager.registerAnimation(this);
+            this.id = Game.Instance.animManager.registerAnimation(this);
             this.registered = true;
         }
 
@@ -68,8 +71,14 @@ export class Animation {
     public stop(): void {
         this.startTime = undefined;
         this.onStopped && this.onStopped(Date.now());
+        this.reset();
+    }
+
+    private reset(): void {
+        this.reversed = false;
+        this.playCount = 0;
         this.onReset && this.onReset(Date.now());
-        this.id && RenderManager.Instance.animManager.unregister(this.id);
+        this.id && Game.Instance.animManager.unregister(this.id, true);
     }
 
     public complete(): void {
@@ -80,8 +89,7 @@ export class Animation {
             reset = false;
         }
         if (reset) {
-            this.onReset && this.onReset(Date.now());
-            this.id && RenderManager.Instance.animManager.unregister(this.id);
+            this.reset();
         }
     }
 
@@ -103,7 +111,7 @@ export class Animation {
         const easedProgress = Ease.ease(this.easeMode, progress);
         const value = GameUtils.lerp(this.startValue, this.endValue, easedProgress);
 
-        this.onStep && this.onStep(Date.now(), easedProgress, value);
+        this.onStep && this.onStep(time, easedProgress, value);
 
         if ((!this.reversed && progress >= 1) || (this.reversed && progress <= 0)) {
             this.complete();
