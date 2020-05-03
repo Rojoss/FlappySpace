@@ -10,6 +10,7 @@ import { GameState } from './GameState';
 import { Gamecomponent } from './GameComponent';
 import { store } from '../ui/react/store/Store';
 import { setGameState, setCrystals, setGameStartTime, setGameLevelAction } from '../ui/react/store/game/GameActions';
+import { updateLevelDataAction } from '../ui/react/store/profile/ProfileActions';
 
 export class Game {
 
@@ -29,6 +30,8 @@ export class Game {
     private _renderManager: RenderManager;
     private _animationManager: AnimationManager;
     private _inputManager: InputManager;
+
+    private _gameStartTime?: number;
 
 
     public static get Instance(): Game {
@@ -90,10 +93,21 @@ export class Game {
         this._state = state;
         this.onStateChange(prevState, state);
         store.dispatch(setGameState(state));
+        if (state === GameState.DEAD) {
+            const survivalTime = this._gameStartTime ? Date.now() - this._gameStartTime : 0;
+            store.dispatch(updateLevelDataAction({
+                level: this.levelID,
+                data: {
+                    crystals: this.renderManager.crystals.collectedCrystalCount,
+                    survivalTime
+                }
+            }));
+        }
         if (state === GameState.PRE_GAME) {
             store.dispatch(setCrystals(0));
         }
         if (state === GameState.PLAYING) {
+            this._gameStartTime = Date.now();
             store.dispatch(setGameStartTime(Date.now()));
         }
     }

@@ -1,3 +1,12 @@
 export interface IProfile {
-    readonly unlockedLevels: number;
+    readonly levelData: IProfileLevelData;
+}
+
+export interface IProfileLevelData {
+    [level: number]: ILevelData;
+}
+
+export interface ILevelData {
+    survivalTime: number;
+    crystals: number;
 }

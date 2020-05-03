@@ -16,6 +16,8 @@ export class Crystals extends PIXI.Container implements IUpdateable {
     private game: Game;
     public updateID: number;
 
+    public collectedCrystalCount: number = 0;
+
     private crystals: PIXI.Sprite[] = [];
     private pooledCrystals: PIXI.Sprite[] = [];
 
@@ -35,7 +37,7 @@ export class Crystals extends PIXI.Container implements IUpdateable {
 
     public onStateChange(prevState: GameState, state: GameState): void {
         if (state === GameState.PRE_GAME) {
-            console.log('RESET Crystals');
+            this.collectedCrystalCount = 0;
             this.restart();
         }
     }
@@ -126,6 +128,7 @@ export class Crystals extends PIXI.Container implements IUpdateable {
         };
         anim.start();
 
+        this.collectedCrystalCount++;
         store.dispatch(addCrystal());
     }
 

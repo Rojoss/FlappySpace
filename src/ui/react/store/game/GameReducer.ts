@@ -8,7 +8,7 @@ export interface IGameState {
     level: number;
     crystals: number;
     highscoreCrystals: number;
-    startTime: number;
+    startTime: number | undefined;
 }
 
 export function getInitialState(): IGameState {
@@ -17,7 +17,7 @@ export function getInitialState(): IGameState {
         level: 1,
         crystals: 0,
         highscoreCrystals: 0,
-        startTime: 0
+        startTime: undefined
     };
 }
 
