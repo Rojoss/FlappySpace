@@ -6,6 +6,7 @@ import { ILevel } from '../../levels/ILevel';
 import { Planets } from '../planets/Planets';
 import { Stars } from '../background/Stars';
 import { Crystals } from '../crystals/Crystals';
+import { AnimationManager } from '../animation/AnimationManager';
 
 export class RenderManager {
 
@@ -17,6 +18,8 @@ export class RenderManager {
     public stageHeight: number = GameConstants.STAGE_HEIGHT;
 
     public level!: ILevel;
+
+    public animManager!: AnimationManager;
 
     public crystals!: Crystals;
     public planets!: Planets;
@@ -35,6 +38,7 @@ export class RenderManager {
 
         this.stage = new GameStage(this);
 
+        this.animManager = new AnimationManager(this.stage);
         this.crystals = new Crystals(this.stage);
         this.planets = new Planets(this.stage);
         this.ship = new Ship(this.stage);
@@ -51,6 +55,7 @@ export class RenderManager {
         this.ship.destroy();
         this.planets.destroy();
         this.crystals.destroy();
+        this.animManager.destroy();
 
         this.initialized = false;
     }

@@ -4,6 +4,8 @@ import { Layer } from '../rendering/Layer';
 import { RenderManager } from '../rendering/RenderManager';
 import { GameUtils } from '../utils/GameUtils';
 import { Color } from '../utils/Color';
+import { EaseMode } from '../animation/Ease';
+import { Animation } from '../animation/Animation';
 
 export class Planets extends PIXI.Container {
 
@@ -63,7 +65,24 @@ export class Planets extends PIXI.Container {
             const distance = (ship.x - planet.x) * (ship.x - planet.x) + (ship.y + ship.collisionOffsetY - planet.y) * (ship.y + ship.collisionOffsetY - planet.y);
             const planetRadius = planet.height / 2;
             const shipRadius = ship.collisionSize / 2;
-            if (distance < (shipRadius + planetRadius) * (shipRadius + planetRadius)) {
+            if (distance < (shipRadius + planetRadius) * (shipRadius + planetRadius) && ship.alive) {
+                (planet as any)['baseScale'] = planet.scale.y;
+                const anim = new Animation(EaseMode.IN_OUT_BOUNCE, 100, (planet as any)['baseScale'], (planet as any)['baseScale'] * 1.1);
+                anim.onStep = (time: number, progress: number, value: number) => {
+                    planet.scale.set(value);
+                };
+                anim.onComplete = () => {
+                    if (anim.playCount === 1) {
+                        anim.start(0, true);
+                        return false;
+                    }
+                    return true;
+                };
+                anim.onReset = () => {
+                    planet.scale.set((planet as any)['baseScale']);
+                };
+                anim.start();
+
                 ship.crash();
             }
 
