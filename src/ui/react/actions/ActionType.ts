@@ -2,7 +2,8 @@ export enum ActionType {
     NOOP = 1,
 
     // Profile
-    UPDATE_LEVEL_DATA = 10,
+    SET_PROFILE = 10,
+    UPDATE_LEVEL_DATA = 11,
 
     // Game
     SET_GAME_LEVEL = 100,

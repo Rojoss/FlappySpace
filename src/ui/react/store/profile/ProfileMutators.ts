@@ -1,5 +1,14 @@
 import { IProfileState } from './ProfileReducer';
 import { IUpdateLevelDataAction } from './ProfileActions';
+import { IProfile } from './IProfile';
+
+export const _setProfile = (state: IProfileState, payload: IProfile): IProfileState => {
+    return {
+        ...state,
+        ...payload
+    };
+};
+
 
 export const _updateLevelData = (state: IProfileState, payload: IUpdateLevelDataAction): IProfileState => {
     if (state.levelData[payload.level] && state.levelData[payload.level].crystals >= payload.data.crystals && state.levelData[payload.level].survivalTime >= payload.data.survivalTime) {

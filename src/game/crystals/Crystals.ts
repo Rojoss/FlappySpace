@@ -49,6 +49,8 @@ export class Crystals extends PIXI.Container implements IUpdateable {
     }
 
     public restart(): void {
+        this.newRecord = this.game.levelStats === undefined || this.game.levelStats.crystals === 0;
+
         for (let i = this.crystals.length - 1; i >= 0; i--) {
             this.removeCrystal(this.crystals[i], i);
         }

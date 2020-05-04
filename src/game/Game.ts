@@ -50,6 +50,7 @@ export class Game {
         Game.INSTANCE = new Game(level);
 
         SoundManager.changeMusic(Sound.MUSIC);
+        Game.INSTANCE.restart();
     }
 
     public static destroyGame(): void {

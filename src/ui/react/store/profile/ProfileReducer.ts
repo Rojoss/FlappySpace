@@ -12,6 +12,7 @@ export function getInitialState(): IProfileState {
 }
 
 const handlers: { [index: number]: any } = {
+    [ActionType.SET_PROFILE]: mutator._setProfile,
     [ActionType.UPDATE_LEVEL_DATA]: mutator._updateLevelData,
 };
 

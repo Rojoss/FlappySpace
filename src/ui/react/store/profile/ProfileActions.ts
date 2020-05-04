@@ -1,6 +1,12 @@
 import { ActionType } from '../../actions/ActionType';
 import { IAction } from '../../actions/IAction';
-import { ILevelData } from './IProfile';
+import { ILevelData, IProfile } from './IProfile';
+
+export const setProfile = (payload: IProfile): IAction<IProfile> => ({
+    type: ActionType.SET_PROFILE,
+    payload
+});
+
 
 export const updateLevelDataAction = (payload: IUpdateLevelDataAction): IAction<IUpdateLevelDataAction> => ({
     type: ActionType.UPDATE_LEVEL_DATA,
