@@ -39,7 +39,7 @@ export class Ship extends PIXI.Container implements IUpdateable {
 
     private brokenShips: PIXI.Sprite[] = [];
 
-    private hoverAnim: Animation;
+    private hoverAnim!: Animation;
 
     constructor(game: Game) {
         super();
