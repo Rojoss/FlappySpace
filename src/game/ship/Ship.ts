@@ -5,6 +5,7 @@ import { Game } from '../Game';
 import { IUpdateable } from '../GameLoop';
 import { GameState } from '../GameState';
 import { SoundManager, Sound } from '../../SoundManager';
+import { ILevel } from '../../levels/ILevel';
 
 export class Ship extends PIXI.Container implements IUpdateable {
 
@@ -76,6 +77,13 @@ export class Ship extends PIXI.Container implements IUpdateable {
         }
         this.velocity = Math.max(this.velocity - (Ship.JUMP_FORCE * multiplier), -Ship.MAX_UPWARDS_VELOCITY);
         SoundManager.playRandomJump(-0.35, -0.2);
+    }
+
+    public onLevelLoad(levelID: number, level: ILevel): void {
+        for (const brokenShip of this.brokenShips) {
+            brokenShip.destroy();
+        }
+        this.brokenShips.length = 0;
     }
 
     public onStateChange(prevState: GameState, state: GameState): void {

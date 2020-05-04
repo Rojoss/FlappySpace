@@ -7,6 +7,7 @@ import { Game } from '../Game';
 import { ScreenShake } from '../effects/ScreenShake';
 import { Gamecomponent } from '../GameComponent';
 import { GameState } from '../GameState';
+import { ILevel } from '../../levels/ILevel';
 
 export class RenderManager extends Gamecomponent {
 
@@ -50,6 +51,10 @@ export class RenderManager extends Gamecomponent {
         this.crystals.onStateChange(prevState, state);
         this.planets.onStateChange(prevState, state);
         this.ship.onStateChange(prevState, state);
+    }
+
+    public onLevelLoad(levelID: number, level: ILevel): void {
+        this.ship.onLevelLoad(levelID, level);
     }
 
 }
