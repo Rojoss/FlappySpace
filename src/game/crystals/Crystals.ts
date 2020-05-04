@@ -12,6 +12,7 @@ import { GameState } from '../GameState';
 export class Crystals extends PIXI.Container implements IUpdateable {
 
     private static readonly TEXTURE: PIXI.Texture = PIXI.Texture.from('/assets/sprites/crystal.png');
+    private static readonly TEXTURE_OLD: PIXI.Texture = PIXI.Texture.from('/assets/sprites/crystal_old.png');
 
     private game: Game;
     public updateID: number;
@@ -21,9 +22,13 @@ export class Crystals extends PIXI.Container implements IUpdateable {
     private crystals: PIXI.Sprite[] = [];
     private pooledCrystals: PIXI.Sprite[] = [];
 
+    private newRecord: boolean = false;
+
     constructor(game: Game) {
         super();
         this.game = game;
+
+        this.newRecord = game.levelStats === undefined || game.levelStats.crystals === 0;
 
         this.updateID = game.loop.addToUpdate(this);
         game.stage.addToScene(Layer.CRYSTALS, this);
@@ -70,13 +75,24 @@ export class Crystals extends PIXI.Container implements IUpdateable {
         }
     }
 
+    private checkForNewRecord(): void {
+        const newRecord = this.game.levelStats === undefined || this.collectedCrystalCount >= this.game.levelStats.crystals;
+        if (this.newRecord !== newRecord) {
+            for (const crystal of this.crystals) {
+                crystal.texture = newRecord ? Crystals.TEXTURE : Crystals.TEXTURE_OLD;
+            }
+            this.newRecord = newRecord;
+        }
+    }
+
     public createCrystal(x: number, y: number): void {
         let crystal: PIXI.Sprite;
         if (this.pooledCrystals.length > 0) {
             crystal = this.pooledCrystals[this.pooledCrystals.length - 1];
             this.pooledCrystals.splice(this.pooledCrystals.length - 1, 1);
+            crystal.texture = this.newRecord ? Crystals.TEXTURE : Crystals.TEXTURE_OLD;
         } else {
-            crystal = new PIXI.Sprite(Crystals.TEXTURE);
+            crystal = new PIXI.Sprite(this.newRecord ? Crystals.TEXTURE : Crystals.TEXTURE_OLD);
         }
         (crystal as any)['active'] = false;
         crystal.x = x;
@@ -142,6 +158,8 @@ export class Crystals extends PIXI.Container implements IUpdateable {
         this.pooledCrystals.push(crystal);
         (crystal as any)['bounceAnim'].stop();
         (crystal as any)['bounceAnim'] = undefined;
+
+        this.checkForNewRecord();
     }
 
 }
