@@ -6,6 +6,8 @@ import { IUpdateable } from '../GameLoop';
 import { GameState } from '../GameState';
 import { SoundManager, Sound } from '../../SoundManager';
 import { ILevel } from '../../levels/ILevel';
+import { EaseMode } from '../animation/Ease';
+import { Animation } from '../animation/Animation';
 
 export class Ship extends PIXI.Container implements IUpdateable {
 
@@ -37,6 +39,8 @@ export class Ship extends PIXI.Container implements IUpdateable {
 
     private brokenShips: PIXI.Sprite[] = [];
 
+    private hoverAnim: Animation;
+
     constructor(game: Game) {
         super();
         this.game = game;
@@ -60,6 +64,15 @@ export class Ship extends PIXI.Container implements IUpdateable {
         this.shipSprite = new PIXI.Sprite(Ship.TEXTURE);
         this.shipSprite.anchor.set(0.5);
         this.addChild(this.shipSprite);
+
+        this.hoverAnim = new Animation(EaseMode.IN_OUT_SINE, 1500, -10, 10);
+        this.hoverAnim.onStep = (time: number, progress: number, value: number) => {
+            this.shipSprite.y = value;
+        };
+        this.hoverAnim.onComplete = () => {
+            this.hoverAnim.start(0, true);
+            return false;
+        };
 
         // const collisionDebug = new PIXI.Sprite(PIXI.Texture.from('/assets/sprites/planet_1.png'));
         // collisionDebug.anchor.set(0.5);
@@ -101,8 +114,11 @@ export class Ship extends PIXI.Container implements IUpdateable {
                 this.brokenShips[this.brokenShips.length - 1].tint = 0x000000;
                 this.brokenShips[this.brokenShips.length - 1].alpha = 0.2;
             }
+
+            this.hoverAnim.start();
         }
         if (state === GameState.PLAYING && !this.alive) {
+            this.hoverAnim.stop();
             this.alive = true;
             this.jump(0.5);
             this.targetSpeed = Ship.DEFAULT_SPEED;
