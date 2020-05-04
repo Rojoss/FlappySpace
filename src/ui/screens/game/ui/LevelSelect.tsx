@@ -39,16 +39,18 @@ class LevelSelect extends React.Component<IProps, any> {
 
         return <div className='level-select'>
             <div className='content'>
-                <div className='crystal-count'>
-                    <img className='crystal' src='/assets/sprites/crystal.png' />
-                    <span className='total'><span className='value'>{totalCrystals}</span> crystals collected</span>
-                </div>
-                <div className='levels'>
-                    {levelTiles}
-                </div>
+                <div className='animated-container'>
+                    <div className='crystal-count'>
+                        <img className='crystal' src='/assets/sprites/crystal.png' />
+                        <span className='total'><span className='value'>{totalCrystals}</span> crystals collected</span>
+                    </div>
+                    <div className='levels'>
+                        {levelTiles}
+                    </div>
 
-                <div className='actions'>
-                    <button className='button button-close' onClick={this.close}>Close</button>
+                    <div className='actions'>
+                        <button className='button button-close' onClick={this.close}>Close</button>
+                    </div>
                 </div>
             </div>
         </div>;

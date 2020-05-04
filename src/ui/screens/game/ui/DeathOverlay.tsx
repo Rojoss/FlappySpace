@@ -29,21 +29,23 @@ export default class DeathOverlay extends React.Component<any, any> {
     public render(): JSX.Element {
         return <div className='death-overlay'>
             <div className='content'>
-                <h2>You Crashed</h2>
+                <div className='animated-container'>
+                    <h2>You Crashed</h2>
 
-                <div className='score'>
-                    <div>Crystals: WIP<div className='record'>NEW RECORD</div></div>
-                    <div>Time: WIP</div>
-                </div>
+                    <div className='score'>
+                        <div>Crystals: WIP<div className='record'>NEW RECORD</div></div>
+                        <div>Time: WIP</div>
+                    </div>
 
-                {/* <div className='new-level'>
-                    <div>You have unlocked a new level!</div>
-                </div> */}
+                    {/* <div className='new-level'>
+                        <div>You have unlocked a new level!</div>
+                    </div> */}
 
-                <div className='actions'>
-                    {/* <button className='button button-next' onClick={this.nextLevel}>Next Level</button> */}
-                    <button className='button button-restart' onClick={this.restart}>Restart</button>
-                    <button className='button button-levelselect' onClick={this.levelSelect}>Level Select</button>
+                    <div className='actions'>
+                        {/* <button className='button button-next' onClick={this.nextLevel}>Next Level</button> */}
+                        <button className='button button-restart' onClick={this.restart}>Restart</button>
+                        <button className='button button-levelselect' onClick={this.levelSelect}>Level Select</button>
+                    </div>
                 </div>
             </div>
         </div>;

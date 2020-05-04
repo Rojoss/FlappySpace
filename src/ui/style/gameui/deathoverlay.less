@@ -13,14 +13,18 @@
         left: 50%;
         top: 50%;
         transform: translateX(-50%) translateY(-50%);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        background: @c-secondary;
-        border-radius: 5px;
-        box-shadow: 3px 3px 10px @c-shadow;
-        padding: 40px;
+
+        .animated-container {
+            animation: container-fade-in 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+            background: @c-secondary;
+            border-radius: 5px;
+            box-shadow: 3px 3px 10px @c-shadow;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
     }
 
     .score {
@@ -54,8 +58,6 @@
     .actions {
         display: flex;
         flex-direction: column;
-        opacity: 0;
-        animation: fade-in 0.6s ease 0.8s forwards;
 
         button {
             width: 220px;
@@ -70,7 +72,7 @@
             cursor: pointer;
 
             &:hover {
-                background-color: @c-dark;
+                background-color: @c-primary-light;
             }
             &:active {
                 transform: scale(0.95);
@@ -108,11 +110,13 @@
   }
 }
 
-@keyframes fade-in {
+@keyframes container-fade-in {
   0% {
+    transform: translateY(-50px);
     opacity: 0;
   }
   100% {
+    transform: translateY(0);
     opacity: 1;
   }
 }
