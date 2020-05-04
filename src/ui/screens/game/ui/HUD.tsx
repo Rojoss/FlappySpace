@@ -79,14 +79,17 @@ class HUD extends React.Component<IHUDProps, IState> {
     }
 
     public render(): JSX.Element {
+        const pastRecord = this.props.crystals > this.props.levelStats.crystals;
         return <div className='hud'>
             <div className='level'>{Levels.get(this.props.level).name}</div>
             <div className='crystals'>
-                <img className='crystal' src='/assets/sprites/crystal.png' />
+                <img className='crystal' src={pastRecord ? `/assets/sprites/crystal.png` : '/assets/sprites/crystal_old.png'} />
                 <div className='value'>
                     <span className='current'>{this.props.crystals}</span>
-                    {this.props.crystals > this.props.levelStats.crystals &&
+                    {pastRecord ?
                         <span className='new'> +{this.props.crystals - this.props.levelStats.crystals}</span>
+                        :
+                        <span className='record'> / {this.props.levelStats.crystals}</span>
                     }
                 </div>
             </div>
