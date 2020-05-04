@@ -4,13 +4,14 @@ import { GameState } from '../../../../game/GameState';
 import { connect } from 'react-redux';
 import { Levels } from '../../../../levels/Levels';
 import { UIUtils } from '../../../UIUtils';
+import { ILevelData } from '../../../react/store/profile/IProfile';
 
 export interface IHUDProps {
     state: GameState;
     level: number;
     crystals: number;
-    highscoreCrystals: number;
-    startTime: number;
+    levelStats: ILevelData;
+    startTime: number | undefined;
 }
 
 interface IState {
@@ -21,7 +22,7 @@ const mapStateToProps = (state: IRootState): IHUDProps => ({
     state: state.game.state,
     level: state.game.level,
     crystals: state.game.crystals,
-    highscoreCrystals: state.game.highscoreCrystals,
+    levelStats: state.game.currentLevelStats,
     startTime: state.game.startTime
 });
 
@@ -57,7 +58,6 @@ class HUD extends React.Component<IHUDProps, IState> {
         if (this.timeoutID !== undefined) {
             return;
         }
-        console.log('Start timeout');
         this.update();
         this.timeoutID = window.setTimeout(this.update, 100);
     }
@@ -68,7 +68,7 @@ class HUD extends React.Component<IHUDProps, IState> {
     }
 
     private update(): void {
-        if (this.props.state !== GameState.PLAYING) {
+        if (this.props.state !== GameState.PLAYING || !this.props.startTime) {
             this.stopUpdateLoop();
             return;
         }
@@ -85,11 +85,14 @@ class HUD extends React.Component<IHUDProps, IState> {
                 <img className='crystal' src='/assets/sprites/crystal.png' />
                 <div className='value'>
                     <span className='current'>{this.props.crystals}</span>
-                    <span className='divider'>/</span>
-                    <span className='target'>{this.props.highscoreCrystals}</span>
+                    {this.props.crystals > this.props.levelStats.crystals &&
+                        <span className='new'> +{this.props.crystals - this.props.levelStats.crystals}</span>
+                    }
                 </div>
             </div>
-            <div className='time'>{UIUtils.formatDuration(this.state.timeAlive)}</div>
+            <div className='time'>
+                {UIUtils.formatDuration(this.state.timeAlive)}
+            </div>
         </div>;
     }
 }

@@ -1,6 +1,7 @@
 import { ActionType } from '../../actions/ActionType';
 import { IAction } from '../../actions/IAction';
 import { GameState } from '../../../../game/GameState';
+import { ILevelData } from '../profile/IProfile';
 
 export const setGameLevelAction = (payload: ISetGameLevelActionPayload): IAction<ISetGameLevelActionPayload> => ({
     type: ActionType.SET_GAME_LEVEL,
@@ -19,11 +20,11 @@ export const addCrystal = (): IAction<undefined> => ({
     payload: undefined
 });
 
-export const setCrystalHighscore = (payload: ISetCrystalHighscoreActionPayload): IAction<ISetCrystalHighscoreActionPayload> => ({
-    type: ActionType.SET_CRYSTAL_HIGHSCORE,
+export const setCurrentLevelStats = (payload: ISetLevelStatsPayload): IAction<ISetLevelStatsPayload> => ({
+    type: ActionType.SET_CURRENT_LEVEL_STATS,
     payload
 });
-export type ISetCrystalHighscoreActionPayload = number;
+export type ISetLevelStatsPayload = ILevelData;
 
 export const setGameState = (payload: ISetGameStateActionPayload): IAction<ISetGameStateActionPayload> => ({
     type: ActionType.SET_GAME_STATE,
@@ -36,3 +37,9 @@ export const setGameStartTime = (payload: ISetGameStartTimeActionPayload): IActi
     payload
 });
 export type ISetGameStartTimeActionPayload = number | undefined;
+
+export const setLevelSelectVisible = (payload: ISetLevelSelectVisibleActionPayload): IAction<ISetLevelSelectVisibleActionPayload> => ({
+    type: ActionType.SET_LEVEL_SELECT_VISIBLE,
+    payload
+});
+export type ISetLevelSelectVisibleActionPayload = boolean;

@@ -6,6 +6,7 @@ export class Levels {
     private static readonly levelList: ILevel[] = [
         {
             name: 'Mars', // Red
+            crystalsToUnlock: 0,
             bgTopColor: '#731337',
             bgBottomClr: '#201725',
             planetBlendColor: '#e3702d',
@@ -17,6 +18,7 @@ export class Levels {
         },
         {
             name: 'Neptune', // Blue
+            crystalsToUnlock: 20,
             bgTopColor: '#135973',
             bgBottomClr: '#091125',
             planetBlendColor: '#5336a3',
@@ -28,6 +30,7 @@ export class Levels {
         },
         {
             name: 'Uranus', // Green
+            crystalsToUnlock: 60,
             bgTopColor: '#65cc57',
             bgBottomClr: '#122a23',
             planetBlendColor: '#0fb88b',
@@ -39,6 +42,7 @@ export class Levels {
         },
         {
             name: 'Pluto', // Pink
+            crystalsToUnlock: 120,
             bgTopColor: '#a53572',
             bgBottomClr: '#3f1730',
             planetBlendColor: '##d172db',
@@ -50,6 +54,7 @@ export class Levels {
         },
         {
             name: 'Venus', // Orange
+            crystalsToUnlock: 200,
             bgTopColor: '#a85002',
             bgBottomClr: '#3b1403',
             planetBlendColor: '#e8b938',
@@ -61,6 +66,7 @@ export class Levels {
         },
         {
             name: 'Mercury', //  Teal
+            crystalsToUnlock: 300,
             bgTopColor: '#0c7856',
             bgBottomClr: '#12272a',
             planetBlendColor: '#7ad6d2',

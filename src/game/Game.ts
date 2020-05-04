@@ -8,9 +8,10 @@ import { AnimationManager } from './animation/AnimationManager';
 import { GameLoop } from './GameLoop';
 import { GameState } from './GameState';
 import { Gamecomponent } from './GameComponent';
-import { store } from '../ui/react/store/Store';
-import { setGameState, setCrystals, setGameStartTime, setGameLevelAction } from '../ui/react/store/game/GameActions';
+import { store, GetState } from '../ui/react/store/Store';
+import { setGameState, setCrystals, setGameStartTime, setGameLevelAction, setCurrentLevelStats } from '../ui/react/store/game/GameActions';
 import { updateLevelDataAction } from '../ui/react/store/profile/ProfileActions';
+import { ILevelData } from '../ui/react/store/profile/IProfile';
 
 export class Game {
 
@@ -32,7 +33,7 @@ export class Game {
     private _inputManager: InputManager;
 
     private _gameStartTime?: number;
-
+    private _levelStats?: ILevelData;
 
     public static get Instance(): Game {
         if (!Game.INSTANCE) {
@@ -113,12 +114,20 @@ export class Game {
     }
 
     public restart(): void {
+        this._levelStats = GetState().profile.levelData[this.levelID] ? { ...GetState().profile.levelData[this.levelID] } : { crystals: 0, survivalTime: 0 };
+        store.dispatch(setCurrentLevelStats(this._levelStats));
+
         this.setState(GameState.PRE_GAME);
         store.dispatch(setGameStartTime(undefined));
     }
 
     public nextLevel(): void {
         this.setLevel(this._levelID + 1);
+        this.restart();
+    }
+
+    public loadLevel(level: number): void {
+        this.setLevel(level);
         this.restart();
     }
 
@@ -156,6 +165,10 @@ export class Game {
 
     public get levelID(): number {
         return this._levelID;
+    }
+
+    public get levelStats(): ILevelData | undefined {
+        return this._levelStats;
     }
 
     public get width(): number {

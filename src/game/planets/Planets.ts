@@ -58,7 +58,6 @@ export class Planets extends PIXI.Container implements IUpdateable {
 
     public onStateChange(prevState: GameState, state: GameState): void {
         if (state === GameState.PRE_GAME) {
-            console.log('RESET Planets');
             this.restart();
         }
     }

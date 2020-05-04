@@ -1,16 +1,14 @@
 import * as React from 'react';
 import { Game } from '../../../../game/Game';
+import { store } from '../../../react/store/Store';
+import { setLevelSelectVisible } from '../../../react/store/game/GameActions';
 
 export default class DeathOverlay extends React.Component<any, any> {
 
     public componentWillMount(): void {
+        this.nextLevel = this.nextLevel.bind(this);
         this.restart = this.restart.bind(this);
-        this.menu = this.menu.bind(this);
-    }
-
-    private restart(event: any): void {
-        event && event.preventDefault();
-        Game.Instance.restart();
+        this.levelSelect = this.levelSelect.bind(this);
     }
 
     private nextLevel(event: any): void {
@@ -18,8 +16,14 @@ export default class DeathOverlay extends React.Component<any, any> {
         Game.Instance.nextLevel();
     }
 
-    private menu(event: any): void {
+    private restart(event: any): void {
         event && event.preventDefault();
+        Game.Instance.restart();
+    }
+
+    private levelSelect(event: any): void {
+        event && event.preventDefault();
+        store.dispatch(setLevelSelectVisible(true));
     }
 
     public render(): JSX.Element {
@@ -39,7 +43,7 @@ export default class DeathOverlay extends React.Component<any, any> {
                 <div className='actions'>
                     <button className='button button-next' onClick={this.nextLevel}>Next Level</button>
                     <button className='button button-restart' onClick={this.restart}>Restart</button>
-                    <button className='button button-back' onClick={this.menu}>Back To Menu</button>
+                    <button className='button button-levelselect' onClick={this.levelSelect}>Level Select</button>
                 </div>
             </div>
         </div>;

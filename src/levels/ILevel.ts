@@ -1,6 +1,8 @@
 export interface ILevel {
     name: string;
 
+    crystalsToUnlock: number;
+
     bgTopColor: string;
     bgBottomClr: string;
     planetBlendColor: string;

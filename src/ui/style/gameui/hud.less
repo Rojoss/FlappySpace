@@ -41,21 +41,29 @@
         .value {
             margin-left: 15px;
             font-size: 20px;
-            .font-title-medium;
+            .font-title-semibold;
             color: @c-white;
             display: flex;
             align-items: center;
             justify-items: center;
 
-            .divider {
-                padding: 0 1px;
-                font-size: 30px;
-                color: @c-gray;
-            }
-
-            .current {
+            .new {
                 color: #fac5ff;
+                margin-top: 3px;
+                padding-left: 8px;
+                font-size: 17px;
+                .font-title-medium;
             }
         }
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .time,
+    .level {
+        left: initial !important;
+        right: 30px !important;
+        text-align: right !important;
+        transform: translate(0) !important;
     }
 }

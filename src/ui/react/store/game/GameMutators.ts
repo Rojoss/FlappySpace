@@ -1,5 +1,5 @@
 import { IGameState } from './GameReducer';
-import { ISetCrystalsActionPayload, ISetGameStateActionPayload, ISetGameLevelActionPayload, ISetCrystalHighscoreActionPayload, ISetGameStartTimeActionPayload } from './GameActions';
+import { ISetCrystalsActionPayload, ISetGameStateActionPayload, ISetGameLevelActionPayload, ISetLevelStatsPayload, ISetGameStartTimeActionPayload, ISetLevelSelectVisibleActionPayload } from './GameActions';
 
 export const _setGameState = (state: IGameState, payload: ISetGameStateActionPayload): IGameState => {
     return {
@@ -22,18 +22,17 @@ export const _setCrystals = (state: IGameState, payload: ISetCrystalsActionPaylo
     };
 };
 
-export const _setCrystalHighscore = (state: IGameState, payload: ISetCrystalHighscoreActionPayload): IGameState => {
+export const _setCurrentLevelStats = (state: IGameState, payload: ISetLevelStatsPayload): IGameState => {
     return {
         ...state,
-        highscoreCrystals: payload
+        currentLevelStats: payload
     };
 };
 
 export const _addCrystal = (state: IGameState, payload: undefined): IGameState => {
     return {
         ...state,
-        crystals: state.crystals + 1,
-        highscoreCrystals: state.crystals + 1 > state.highscoreCrystals ? state.crystals + 1 : state.highscoreCrystals
+        crystals: state.crystals + 1
     };
 };
 
@@ -41,5 +40,12 @@ export const _setGameStartTime = (state: IGameState, payload: ISetGameStartTimeA
     return {
         ...state,
         startTime: payload
+    };
+};
+
+export const _setLevelSelectVisible = (state: IGameState, payload: ISetLevelSelectVisibleActionPayload): IGameState => {
+    return {
+        ...state,
+        levelSelectVisible: payload
     };
 };
