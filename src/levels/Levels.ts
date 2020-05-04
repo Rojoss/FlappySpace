@@ -1,5 +1,6 @@
 import { ILevel } from './ILevel';
 import { ControllerDifficulty } from './ControllerDifficulty';
+import { Sound } from '../SoundManager';
 
 export class Levels {
 
@@ -15,6 +16,7 @@ export class Levels {
             maxPlanetDistance: 500,
             speedMultiplier: 1.0,
             planetSeed: 100,
+            ambientSound: Sound.AMBIENT_2,
         },
         {
             name: 'Neptune', // Blue
@@ -27,6 +29,7 @@ export class Levels {
             maxPlanetDistance: 490,
             speedMultiplier: 1.1,
             planetSeed: 10,
+            ambientSound: Sound.AMBIENT_1,
         },
         {
             name: 'Uranus', // Green
@@ -39,6 +42,7 @@ export class Levels {
             maxPlanetDistance: 480,
             speedMultiplier: 1.2,
             planetSeed: 200,
+            ambientSound: Sound.AMBIENT_5,
         },
         {
             name: 'Pluto', // Pink
@@ -51,6 +55,7 @@ export class Levels {
             maxPlanetDistance: 470,
             speedMultiplier: 1.3,
             planetSeed: 300,
+            ambientSound: Sound.AMBIENT_6,
         },
         {
             name: 'Venus', // Orange
@@ -63,6 +68,7 @@ export class Levels {
             maxPlanetDistance: 460,
             speedMultiplier: 1.4,
             planetSeed: 400,
+            ambientSound: Sound.AMBIENT_3,
         },
         {
             name: 'Mercury', //  Teal
@@ -75,6 +81,7 @@ export class Levels {
             maxPlanetDistance: 450,
             speedMultiplier: 1.5,
             planetSeed: 500,
+            ambientSound: Sound.AMBIENT_4,
         }
     ];
 

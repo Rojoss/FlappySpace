@@ -1,3 +1,5 @@
+import { Sound } from '../SoundManager';
+
 export interface ILevel {
     name: string;
 
@@ -14,4 +16,6 @@ export interface ILevel {
     maxPlanetDistance: number;
 
     planetSeed: number;
+
+    ambientSound: Sound;
 }

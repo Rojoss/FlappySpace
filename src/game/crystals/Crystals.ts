@@ -8,6 +8,7 @@ import { IUpdateable } from '../GameLoop';
 import { store } from '../../ui/react/store/Store';
 import { addCrystal } from '../../ui/react/store/game/GameActions';
 import { GameState } from '../GameState';
+import { SoundManager, Sound } from '../../SoundManager';
 
 export class Crystals extends PIXI.Container implements IUpdateable {
 
@@ -82,6 +83,9 @@ export class Crystals extends PIXI.Container implements IUpdateable {
                 crystal.texture = newRecord ? Crystals.TEXTURE : Crystals.TEXTURE_OLD;
             }
             this.newRecord = newRecord;
+            if (this.collectedCrystalCount > 0 && newRecord === true) {
+                SoundManager.play(Sound.GEM_CHANGE);
+            }
         }
     }
 
@@ -146,6 +150,11 @@ export class Crystals extends PIXI.Container implements IUpdateable {
 
         this.collectedCrystalCount++;
         store.dispatch(addCrystal());
+        if (this.newRecord) {
+            SoundManager.playWithRandomPitch(Sound.GEM_PICKUP);
+        } else {
+            SoundManager.playWithRandomPitch(Sound.GEM_OLD_PICKUP);
+        }
     }
 
     public missedCrystal(crystal: PIXI.Sprite, index: number): void {

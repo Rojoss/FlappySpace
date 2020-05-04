@@ -12,6 +12,7 @@ import { store, GetState } from '../ui/react/store/Store';
 import { setGameState, setCrystals, setGameStartTime, setGameLevelAction, setCurrentLevelStats } from '../ui/react/store/game/GameActions';
 import { updateLevelDataAction } from '../ui/react/store/profile/ProfileActions';
 import { ILevelData } from '../ui/react/store/profile/IProfile';
+import { SoundManager, Sound } from '../SoundManager';
 
 export class Game {
 
@@ -47,6 +48,8 @@ export class Game {
             return;
         }
         Game.INSTANCE = new Game(level);
+
+        SoundManager.changeMusic(Sound.MUSIC);
     }
 
     public static destroyGame(): void {
@@ -85,8 +88,11 @@ export class Game {
     private setLevel(level: number): void {
         this._levelID = level;
         this._level = Levels.get(level);
+
         store.dispatch(setGameLevelAction(level));
         this.onLevelLoad(this._levelID, this._level);
+
+        SoundManager.changeAmbient(this._level.ambientSound);
     }
 
     public setState(state: GameState): void {
@@ -105,9 +111,12 @@ export class Game {
             }));
         }
         if (state === GameState.PRE_GAME) {
+            SoundManager.removeDeathFilter();
             store.dispatch(setCrystals(0));
+            SoundManager.play(Sound.AMBIENT_BASE);
         }
         if (state === GameState.PLAYING) {
+            SoundManager.play(Sound.SHIP_MOVE);
             this._gameStartTime = Date.now();
             store.dispatch(setGameStartTime(Date.now()));
         }

@@ -4,6 +4,7 @@ import { GameUtils } from '../utils/GameUtils';
 import { Game } from '../Game';
 import { IUpdateable } from '../GameLoop';
 import { GameState } from '../GameState';
+import { SoundManager, Sound } from '../../SoundManager';
 
 export class Ship extends PIXI.Container implements IUpdateable {
 
@@ -74,6 +75,7 @@ export class Ship extends PIXI.Container implements IUpdateable {
             return;
         }
         this.velocity = Math.max(this.velocity - (Ship.JUMP_FORCE * multiplier), -Ship.MAX_UPWARDS_VELOCITY);
+        SoundManager.playRandomJump(-0.35, -0.2);
     }
 
     public onStateChange(prevState: GameState, state: GameState): void {
@@ -111,6 +113,10 @@ export class Ship extends PIXI.Container implements IUpdateable {
         this.game.renderManager.shakeEffect.shake(0.85, 60, 40);
         this.game.renderManager.flashEffect.flash(parseInt(this.game.level.bgTopColor, 16), 20, 250, 0.3);
         this.game.setState(GameState.DEAD);
+
+        SoundManager.stop(Sound.SHIP_MOVE);
+        SoundManager.play(Sound.EXPLODE);
+        SoundManager.addFDeathFilter();
 
         if (planet) {
             const crashedShip = new PIXI.Sprite(Ship.TEXTURE_DEAD);
