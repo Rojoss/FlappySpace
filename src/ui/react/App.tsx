@@ -25,6 +25,6 @@ export default class App extends React.Component<any, any> {
 }
 
 export enum Routes {
-    SPLASH = '/splash',
-    GAME = '/',
+    SPLASH = '/',
+    GAME = '/game',
 }

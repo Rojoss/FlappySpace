@@ -48,9 +48,7 @@ export class Game {
             return;
         }
         Game.INSTANCE = new Game(level);
-
-        SoundManager.changeMusic(Sound.MUSIC);
-        Game.INSTANCE.restart();
+        Game.INSTANCE.postInit();
     }
 
     public static destroyGame(): void {
@@ -60,7 +58,8 @@ export class Game {
     }
 
     constructor(level: number) {
-        this.setLevel(level);
+        this._levelID = level;
+        this._level = Levels.get(level);
 
         this._stage = new GameStage(this);
         this._components.push(this._stage);
@@ -72,6 +71,14 @@ export class Game {
         this._components.push(this._animationManager);
         this._inputManager = new InputManager(this);
         this._components.push(this._inputManager);
+
+    }
+
+    public postInit(): void {
+        this.stage.autoScaler.onResize();
+        SoundManager.changeMusic(Sound.MUSIC);
+        this.setLevel(this.levelID);
+        this.restart();
     }
 
     public destroy(): void {
@@ -110,11 +117,14 @@ export class Game {
                     survivalTime
                 }
             }));
+            // SoundManager.pause(Sound.AMBIENT_BASE);
+            SoundManager.getCurrentAmbient()?.pause();
         }
         if (state === GameState.PRE_GAME) {
             SoundManager.removeDeathFilter();
             store.dispatch(setCrystals(0));
             SoundManager.play(Sound.AMBIENT_BASE);
+            SoundManager.getCurrentAmbient()?.play();
         }
         if (state === GameState.PLAYING) {
             SoundManager.play(Sound.SHIP_MOVE);

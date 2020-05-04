@@ -218,6 +218,12 @@ export class Planets extends PIXI.Container implements IUpdateable {
         this.createPlanet();
     }
 
+    private getColor(yPercentage: number): number {
+        let clr = Color.lerp(parseInt(this.game.level.bgTopColor.substr(1), 16), parseInt(this.game.level.bgBottomClr.substr(1), 16), yPercentage);
+        clr = Color.lerp(clr, parseInt(this.game.level.planetBlendColor.substr(1), 16), 0.1 + this.random(3) * 0.4);
+        return clr;
+    }
+
 
     private addPlanet(x: number, y: number, radius: number, top: boolean): void {
         let planet: PIXI.Sprite;
@@ -239,9 +245,7 @@ export class Planets extends PIXI.Container implements IUpdateable {
 
         const stageHeight = this.game.height;
         const yPercentage = GameUtils.clamp(y, -100, stageHeight + 100) / (stageHeight + 200);
-        let clr = Color.lerp(parseInt(this.game.level.bgTopColor.substr(1), 16), parseInt(this.game.level.bgBottomClr.substr(1), 16), yPercentage);
-        clr = Color.lerp(clr, parseInt(this.game.level.planetBlendColor.substr(1), 16), 0.1 + this.random(3) * 0.4);
-        planet.tint = clr;
+        planet.tint = this.getColor(yPercentage);
 
         (planet as any)['top'] = top;
 

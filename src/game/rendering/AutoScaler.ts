@@ -11,10 +11,6 @@ export class AutoScaler {
     constructor(game: Game) {
         this.game = game;
 
-        window.setTimeout(() => {
-            this.onResize();
-        }, 1);
-
         this.boundDebouncedResizeHandler = this.debouncedResizeHandler.bind(this);
         window.addEventListener('resize', this.boundDebouncedResizeHandler);
     }

@@ -1,5 +1,6 @@
 import { Howl } from 'howler';
 import 'howler-plugin-effect-chain';
+import { AssetLoader } from './AssetLoader';
 const Tuna = require('tunajs');
 
 export enum Sound {
@@ -17,7 +18,7 @@ export enum Sound {
     EXPLODE,
 
     MUSIC,
-    MUSIC_MENU,
+    // MUSIC_MENU,
 
     AMBIENT_BASE,
     AMBIENT_1,
@@ -26,8 +27,8 @@ export enum Sound {
     AMBIENT_4,
     AMBIENT_5,
     AMBIENT_6,
-    AMBIENT_7,
-    AMBIENT_8,
+    // AMBIENT_7,
+    // AMBIENT_8,
 }
 
 export enum SoundCategory {
@@ -42,7 +43,7 @@ export class SoundManager {
 
     public static readonly VOLUME_SETTINGS: IVolumeMap = {
         [SoundCategory.SFX]: 1,
-        [SoundCategory.MUSIC]: 0.4,
+        [SoundCategory.MUSIC]: 0.25,
         [SoundCategory.AMBIENT]: 0.5
     };
 
@@ -54,24 +55,24 @@ export class SoundManager {
         [Sound.GEM_OLD_PICKUP]: { category: SoundCategory.SFX },
         [Sound.GEM_CHANGE]: { category: SoundCategory.SFX, volume: 0.6, rate: 1.2 },
         [Sound.BEAT_RECORD]: { category: SoundCategory.SFX },
-        [Sound.SHIP_MOVE]: { category: SoundCategory.SFX, loop: true, volume: 0.2 },
+        [Sound.SHIP_MOVE]: { category: SoundCategory.SFX, loop: true, volume: 0.25 },
         [Sound.JUMP_2]: { category: SoundCategory.SFX, volume: 0.4 },
         [Sound.JUMP_3]: { category: SoundCategory.SFX, volume: 0.4 },
         [Sound.JUMP_1]: { category: SoundCategory.SFX, volume: 0.4 },
         [Sound.EXPLODE]: { category: SoundCategory.SFX, volume: 1.5 },
 
         [Sound.MUSIC]: { category: SoundCategory.MUSIC, loop: true },
-        [Sound.MUSIC_MENU]: { category: SoundCategory.MUSIC, loop: true },
+        // [Sound.MUSIC_MENU]: { category: SoundCategory.MUSIC, loop: true },
 
-        [Sound.AMBIENT_BASE]: { category: SoundCategory.AMBIENT, loop: true },
+        [Sound.AMBIENT_BASE]: { category: SoundCategory.AMBIENT, loop: true, volume: 0.9 },
         [Sound.AMBIENT_1]: { category: SoundCategory.AMBIENT, loop: true },
         [Sound.AMBIENT_2]: { category: SoundCategory.AMBIENT, loop: true },
         [Sound.AMBIENT_3]: { category: SoundCategory.AMBIENT, loop: true },
         [Sound.AMBIENT_4]: { category: SoundCategory.AMBIENT, loop: true },
         [Sound.AMBIENT_5]: { category: SoundCategory.AMBIENT, loop: true },
         [Sound.AMBIENT_6]: { category: SoundCategory.AMBIENT, loop: true },
-        [Sound.AMBIENT_7]: { category: SoundCategory.AMBIENT, loop: true },
-        [Sound.AMBIENT_8]: { category: SoundCategory.AMBIENT, loop: true },
+        // [Sound.AMBIENT_7]: { category: SoundCategory.AMBIENT, loop: true },
+        // [Sound.AMBIENT_8]: { category: SoundCategory.AMBIENT, loop: true },
     };
 
     private static JUMP_SOUNDS: Sound[] = [Sound.JUMP_1, Sound.JUMP_2, Sound.JUMP_3];
@@ -97,6 +98,8 @@ export class SoundManager {
                 rate: data.rate,
                 html5: data.html5
             });
+
+            AssetLoader.handleAudioLoading(sound, data.clip);
         }
     }
 
@@ -129,10 +132,10 @@ export class SoundManager {
     }
 
     public static getCurrentAmbient(): Howl | undefined {
-        if (!SoundManager.CURRENT_MUSIC) {
+        if (!SoundManager.CURRENT_AMBIENT) {
             return;
         }
-        return SoundManager.getClip(SoundManager.CURRENT_MUSIC);
+        return SoundManager.getClip(SoundManager.CURRENT_AMBIENT);
     }
 
     public static play(sound: Sound): void {
