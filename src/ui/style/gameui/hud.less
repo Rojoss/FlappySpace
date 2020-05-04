@@ -3,6 +3,7 @@
     user-select: none;
     pointer-events: none;
     width: 100%;
+    height: 100%;
 
     .level {
         position: absolute;
@@ -62,6 +63,20 @@
             }
         }
     }
+
+    .tutorial-message {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%) scale(0);
+        left: 55px;
+        margin-top: 60px;
+        font-size: 18px;
+        .font-title-semibold;
+        background: rgba(255,255,255,0.1);
+        padding: 5px 20px;
+        border-radius: 5px;
+        animation: scale-up-center 0.4s cubic-bezier(0.175, 0.885, 0.320, 1.275) 1s forwards;
+    }
 }
 
 @media only screen and (max-width: 600px) {
@@ -72,4 +87,13 @@
         text-align: right !important;
         transform: translate(0) !important;
     }
+}
+
+@keyframes scale-up-tooltip {
+  0% {
+        transform: translateY(-50%) scale(0);
+  }
+  100% {
+        transform: translateY(-50%) scale(1);
+  }
 }

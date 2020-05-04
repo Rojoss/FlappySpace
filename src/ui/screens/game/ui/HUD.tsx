@@ -96,6 +96,9 @@ class HUD extends React.Component<IHUDProps, IState> {
             <div className='time'>
                 {UIUtils.formatDuration(this.state.timeAlive)}
             </div>
+            {this.props.state === GameState.PRE_GAME && <div className='tutorial-message'>
+                Tap to start!
+            </div>}
         </div>;
     }
 }
