@@ -28,10 +28,13 @@ class LevelSelect extends React.Component<IProps, any> {
     public render(): JSX.Element {
 
         let totalCrystals: number = 0;
+        for (let i = 1; i <= Levels.count; i++) {
+            totalCrystals += this.props.levelData[i] ? this.props.levelData[i].crystals : 0;
+        }
+
         const levelTiles: JSX.Element[] = [];
         for (let i = 1; i <= Levels.count; i++) {
-            levelTiles.push(<LevelTile key={i} level={i} data={this.props.levelData[i]} crystalCount={20} />);
-            totalCrystals += this.props.levelData[i] ? this.props.levelData[i].crystals : 0;
+            levelTiles.push(<LevelTile key={i} level={i} data={this.props.levelData[i]} crystalCount={totalCrystals} />);
         }
 
         return <div className='level-select'>

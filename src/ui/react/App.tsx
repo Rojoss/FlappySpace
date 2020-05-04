@@ -7,7 +7,6 @@ import { ConnectedRouter } from 'react-router-redux';
 import { Route, Router } from 'react-router-dom';
 import { history } from './History';
 import SplashScreen from '../screens/splash/SplashScreen';
-import MenuScreen from '../screens/menu/MenuScreen';
 import GameScreen from '../screens/game/GameScreen';
 
 export default class App extends React.Component<any, any> {
@@ -17,7 +16,6 @@ export default class App extends React.Component<any, any> {
                 <Provider store={store}>
                     <Router history={history}>
                         <Route exact path={Routes.SPLASH} component={SplashScreen} />
-                        <Route exact path={Routes.MENU} component={MenuScreen} />
                         <Route exact path={Routes.GAME} component={GameScreen} />
                     </Router>
                 </Provider>
@@ -27,7 +25,6 @@ export default class App extends React.Component<any, any> {
 }
 
 export enum Routes {
-    SPLASH = '/',
-    MENU = '/menu',
-    GAME = '/game',
+    SPLASH = '/splash',
+    GAME = '/',
 }
