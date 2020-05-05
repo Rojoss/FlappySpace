@@ -8,11 +8,10 @@ import { SoundManager, Sound } from '../../SoundManager';
 import { ILevel } from '../../levels/ILevel';
 import { EaseMode } from '../animation/Ease';
 import { Animation } from '../animation/Animation';
+import { AssetLoader } from '../../AssetLoader';
+import { SpriteID } from '../../Sprite';
 
 export class Ship extends PIXI.Container implements IUpdateable {
-
-    private static readonly TEXTURE: PIXI.Texture = PIXI.Texture.from('/assets/sprites/ship.png');
-    private static readonly TEXTURE_DEAD: PIXI.Texture = PIXI.Texture.from('/assets/sprites/ship_dead.png');
 
     private static readonly GRAVITY: number = 1.3;
     private static readonly FFRICTION: number = 0.98;
@@ -61,7 +60,7 @@ export class Ship extends PIXI.Container implements IUpdateable {
     }
 
     private initArt(): void {
-        this.shipSprite = new PIXI.Sprite(Ship.TEXTURE);
+        this.shipSprite = new PIXI.Sprite(AssetLoader.getTexture(SpriteID.SHIP));
         this.shipSprite.anchor.set(0.5);
         this.addChild(this.shipSprite);
 
@@ -143,7 +142,7 @@ export class Ship extends PIXI.Container implements IUpdateable {
         SoundManager.addFDeathFilter();
 
         if (planet) {
-            const crashedShip = new PIXI.Sprite(Ship.TEXTURE_DEAD);
+            const crashedShip = new PIXI.Sprite(AssetLoader.getTexture(SpriteID.SHIP_DEAD));
             crashedShip.anchor.set(0.5);
             crashedShip.tint = 0x666666;
             crashedShip.alpha = 0.8;

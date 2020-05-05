@@ -9,11 +9,10 @@ import { store } from '../../ui/react/store/Store';
 import { addCrystal } from '../../ui/react/store/game/GameActions';
 import { GameState } from '../GameState';
 import { SoundManager, Sound } from '../../SoundManager';
+import { AssetLoader } from '../../AssetLoader';
+import { SpriteID } from '../../Sprite';
 
 export class Crystals extends PIXI.Container implements IUpdateable {
-
-    private static readonly TEXTURE: PIXI.Texture = PIXI.Texture.from('/assets/sprites/crystal.png');
-    private static readonly TEXTURE_OLD: PIXI.Texture = PIXI.Texture.from('/assets/sprites/crystal_old.png');
 
     private game: Game;
     public updateID: number;
@@ -82,7 +81,7 @@ export class Crystals extends PIXI.Container implements IUpdateable {
         const newRecord = this.game.levelStats === undefined || this.collectedCrystalCount >= this.game.levelStats.crystals;
         if (this.newRecord !== newRecord) {
             for (const crystal of this.crystals) {
-                crystal.texture = newRecord ? Crystals.TEXTURE : Crystals.TEXTURE_OLD;
+                crystal.texture = AssetLoader.getTexture(newRecord ? SpriteID.CRYSTAL : SpriteID.CRYSTAL_OLD);
             }
             this.newRecord = newRecord;
             if (this.collectedCrystalCount > 0 && newRecord === true) {
@@ -96,9 +95,9 @@ export class Crystals extends PIXI.Container implements IUpdateable {
         if (this.pooledCrystals.length > 0) {
             crystal = this.pooledCrystals[this.pooledCrystals.length - 1];
             this.pooledCrystals.splice(this.pooledCrystals.length - 1, 1);
-            crystal.texture = this.newRecord ? Crystals.TEXTURE : Crystals.TEXTURE_OLD;
+            crystal.texture = AssetLoader.getTexture(this.newRecord ? SpriteID.CRYSTAL : SpriteID.CRYSTAL_OLD);
         } else {
-            crystal = new PIXI.Sprite(this.newRecord ? Crystals.TEXTURE : Crystals.TEXTURE_OLD);
+            crystal = new PIXI.Sprite(AssetLoader.getTexture(this.newRecord ? SpriteID.CRYSTAL : SpriteID.CRYSTAL_OLD));
         }
         (crystal as any)['active'] = false;
         crystal.x = x;

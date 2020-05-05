@@ -3,13 +3,14 @@ import { GameUtils } from '../utils/GameUtils';
 import { Layer } from '../rendering/Layer';
 import { Game } from '../Game';
 import { IUpdateable } from '../GameLoop';
+import { AssetLoader } from '../../AssetLoader';
+import { SpriteID } from '../../Sprite';
 
 export class Stars extends PIXI.Container implements IUpdateable {
 
     private static readonly MIN_SIZE: number = 0.5;
     private static readonly MAX_SIZE: number = 7;
     private static readonly STARS_PER_1000PX: number = 50;
-    private static readonly STAR_TEXTURE: PIXI.Texture = PIXI.Texture.from('/assets/sprites/star.png');
     private static readonly STAR_OPACITY_MIN: number = 0.1;
     private static readonly STAR_OPACITY_MAX: number = 0.4;
 
@@ -65,7 +66,7 @@ export class Stars extends PIXI.Container implements IUpdateable {
     }
 
     private createStar(initial: boolean): void {
-        const star = new PIXI.Sprite(Stars.STAR_TEXTURE);
+        const star = new PIXI.Sprite(AssetLoader.getTexture(SpriteID.STAR));
         this.setRandomStarSize(star);
         star.x = initial ? Math.random() * this.game.width : this.game.width;
         star.y = Math.random() * this.game.height;

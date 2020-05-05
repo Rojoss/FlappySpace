@@ -7,16 +7,13 @@ import { Animation } from '../animation/Animation';
 import { Game } from '../Game';
 import { IUpdateable } from '../GameLoop';
 import { GameState } from '../GameState';
+import { SpriteID } from '../../Sprite';
+import { AssetLoader } from '../../AssetLoader';
 
 export class Planets extends PIXI.Container implements IUpdateable {
 
-    private static readonly PLANET_TEXTURES: PIXI.Texture[] = [
-        PIXI.Texture.from('/assets/sprites/planet_1.png'),
-        PIXI.Texture.from('/assets/sprites/planet_2.png'),
-        PIXI.Texture.from('/assets/sprites/planet_3.png'),
-        PIXI.Texture.from('/assets/sprites/planet_4.png'),
-        PIXI.Texture.from('/assets/sprites/planet_5.png'),
-        PIXI.Texture.from('/assets/sprites/planet_6.png'),
+    private static readonly PLANET_SPRITES: SpriteID[] = [
+        SpriteID.PLANET_1, SpriteID.PLANET_2, SpriteID.PLANET_3, SpriteID.PLANET_4, SpriteID.PLANET_5, SpriteID.PLANET_6
     ];
 
     private static readonly START_OFFSET: number = 1000;
@@ -231,7 +228,8 @@ export class Planets extends PIXI.Container implements IUpdateable {
             planet = this.planetPool[this.planetPool.length - 1];
             this.planetPool.splice(this.planetPool.length - 1);
         } else {
-            planet = new PIXI.Sprite(Planets.PLANET_TEXTURES[Math.floor(this.random() * Planets.PLANET_TEXTURES.length)]);
+            const texture = AssetLoader.getTexture(Planets.PLANET_SPRITES[Math.floor(this.random() * Planets.PLANET_SPRITES.length)]);
+            planet = new PIXI.Sprite(texture);
         }
 
         planet.x = x;

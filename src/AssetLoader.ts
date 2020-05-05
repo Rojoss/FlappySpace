@@ -1,7 +1,6 @@
 import * as PIXI from 'pixi.js';
-import { SPRITE_PATHS, SpriteID } from './Sprite';
 import { Sound } from './SoundManager';
-import { UIImage } from './ui/UIImage';
+import { SpriteID } from './Sprite';
 
 export class AssetLoader {
 
@@ -13,8 +12,17 @@ export class AssetLoader {
 
     private static soundsToLoad: Sound[] = [];
 
+    private static readonly pixiLoader: PIXI.Loader = new PIXI.Loader();
+
     private static loadedCallback: OnAssetsLoadedFunc;
     private static errorCallback: OnAssetsLoadErrorFunc;
+
+    public static getTexture(spriteID: SpriteID): PIXI.Texture {
+        console.log(AssetLoader.pixiLoader.resources);
+        const sheet = AssetLoader.pixiLoader.resources['../assets/spritesheet.json'];
+        sheet && console.log(sheet.textures);
+        return sheet && sheet.textures ? sheet.textures[`${SpriteID[spriteID].toLowerCase()}.png`] : PIXI.Texture.WHITE;
+    }
 
     public static load(onLoaded: OnAssetsLoadedFunc, onError: OnAssetsLoadErrorFunc): boolean {
         // Already loading/loaded
@@ -26,23 +34,15 @@ export class AssetLoader {
         AssetLoader.loadedCallback = onLoaded;
         AssetLoader.errorCallback = onError;
 
-        const pixiLoader = new PIXI.Loader();
+        AssetLoader.pixiLoader.add('../assets/spritesheet.json');
 
-        for (const key in SPRITE_PATHS) {
-            if (!SPRITE_PATHS.hasOwnProperty(key)) {
-                continue;
-            }
-            const spr: SpriteID = Number(key);
-            pixiLoader.add(SpriteID[spr], SPRITE_PATHS[key]);
-        }
-
-        pixiLoader.load();
-        pixiLoader.on('complete', () => {
+        AssetLoader.pixiLoader.load();
+        AssetLoader.pixiLoader.on('complete', () => {
             console.info(`Sprites loaded.`);
             AssetLoader.spritesLoaded = true;
             AssetLoader.tryComplete();
         });
-        pixiLoader.on('error', (error, loader, resource) => {
+        AssetLoader.pixiLoader.on('error', (error, loader, resource) => {
             AssetLoader.handleError(error);
         });
 

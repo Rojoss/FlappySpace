@@ -1,0 +1,119 @@
+{"frames": {
+
+"clock.png":
+{
+	"frame": {"x":32,"y":0,"w":64,"h":78},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":78},
+	"sourceSize": {"w":64,"h":78}
+},
+"crystal.png":
+{
+	"frame": {"x":160,"y":0,"w":82,"h":124},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":82,"h":124},
+	"sourceSize": {"w":82,"h":124}
+},
+"crystal_old.png":
+{
+	"frame": {"x":242,"y":0,"w":82,"h":124},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":82,"h":124},
+	"sourceSize": {"w":82,"h":124}
+},
+"lock.png":
+{
+	"frame": {"x":96,"y":0,"w":64,"h":87},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":87},
+	"sourceSize": {"w":64,"h":87}
+},
+"planet_1.png":
+{
+	"frame": {"x":0,"y":256,"w":512,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":512,"h":512},
+	"sourceSize": {"w":512,"h":512}
+},
+"planet_2.png":
+{
+	"frame": {"x":512,"y":256,"w":512,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":512,"h":512},
+	"sourceSize": {"w":512,"h":512}
+},
+"planet_3.png":
+{
+	"frame": {"x":0,"y":768,"w":512,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":512,"h":512},
+	"sourceSize": {"w":512,"h":512}
+},
+"planet_4.png":
+{
+	"frame": {"x":512,"y":768,"w":512,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":512,"h":512},
+	"sourceSize": {"w":512,"h":512}
+},
+"planet_5.png":
+{
+	"frame": {"x":0,"y":1280,"w":512,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":512,"h":512},
+	"sourceSize": {"w":512,"h":512}
+},
+"planet_6.png":
+{
+	"frame": {"x":512,"y":1280,"w":512,"h":512},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":512,"h":512},
+	"sourceSize": {"w":512,"h":512}
+},
+"ship.png":
+{
+	"frame": {"x":324,"y":0,"w":256,"h":256},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":256},
+	"sourceSize": {"w":256,"h":256}
+},
+"ship_dead.png":
+{
+	"frame": {"x":580,"y":0,"w":256,"h":256},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":256,"h":256},
+	"sourceSize": {"w":256,"h":256}
+},
+"star.png":
+{
+	"frame": {"x":0,"y":0,"w":32,"h":32},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
+	"sourceSize": {"w":32,"h":32}
+}},
+"animations": {
+	"planet": ["planet_1.png","planet_2.png","planet_3.png","planet_4.png","planet_5.png","planet_6.png"]
+},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "spritesheet.png",
+	"format": "RGBA8888",
+	"size": {"w":1024,"h":1792},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:50cf9c6178cc21462fd11e39e4f1cc0b:9191bdfac3a2d4732c090df56992278c:729adc6043343cfda41c447ce8f464d6$"
+}
+}
