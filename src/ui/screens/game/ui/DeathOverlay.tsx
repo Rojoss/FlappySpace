@@ -143,7 +143,8 @@ class DeathOverlay extends React.Component<IProps, any> {
                     </div>
 
                     <div className='actions'>
-                        <button className='button button-restart' onClick={this.restart}>Play Again</button>
+                        {newLevelUnlocked && <button className='button button-next' onClick={this.nextLevel}>Next Level</button>}
+                        {!newLevelUnlocked && <button className='button button-restart' onClick={this.restart}>Play Again</button>}
                         <button className='button button-levelselect' onClick={this.levelSelect}>Level Select</button>
                     </div>
                 </div>
