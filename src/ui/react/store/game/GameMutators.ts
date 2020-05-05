@@ -1,5 +1,5 @@
 import { IGameState } from './GameReducer';
-import { ISetCrystalsActionPayload, ISetGameStateActionPayload, ISetGameLevelActionPayload, ISetLevelStatsPayload, ISetGameStartTimeActionPayload, ISetLevelSelectVisibleActionPayload } from './GameActions';
+import { ISetCrystalsActionPayload, ISetGameStateActionPayload, ISetGameLevelActionPayload, ISetLevelStatsPayload, ISetGameStartTimeActionPayload, ISetLevelSelectVisibleActionPayload, ISetResultLevelStatsPayload } from './GameActions';
 
 export const _setGameState = (state: IGameState, payload: ISetGameStateActionPayload): IGameState => {
     return {
@@ -26,6 +26,13 @@ export const _setCurrentLevelStats = (state: IGameState, payload: ISetLevelStats
     return {
         ...state,
         currentLevelStats: payload
+    };
+};
+
+export const _setResultLevelStats = (state: IGameState, payload: ISetResultLevelStatsPayload): IGameState => {
+    return {
+        ...state,
+        resultLevelStats: payload
     };
 };
 

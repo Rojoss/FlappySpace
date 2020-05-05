@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js';
 import { SPRITE_PATHS, SpriteID } from './Sprite';
 import { Sound } from './SoundManager';
+import { UIImage } from './ui/UIImage';
 
 export class AssetLoader {
 
@@ -36,9 +37,6 @@ export class AssetLoader {
         }
 
         pixiLoader.load();
-        pixiLoader.on('progress', (a, b) => {
-            console.log(a, b);
-        });
         pixiLoader.on('complete', () => {
             console.info(`Sprites loaded.`);
             AssetLoader.spritesLoaded = true;

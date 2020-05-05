@@ -26,6 +26,12 @@ export const setCurrentLevelStats = (payload: ISetLevelStatsPayload): IAction<IS
 });
 export type ISetLevelStatsPayload = ILevelData;
 
+export const setResultLevelStats = (payload: ISetResultLevelStatsPayload): IAction<ISetResultLevelStatsPayload> => ({
+    type: ActionType.SET_RESULT_LEVEL_STATS,
+    payload
+});
+export type ISetResultLevelStatsPayload = ILevelData | undefined;
+
 export const setGameState = (payload: ISetGameStateActionPayload): IAction<ISetGameStateActionPayload> => ({
     type: ActionType.SET_GAME_STATE,
     payload

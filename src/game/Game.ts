@@ -9,7 +9,7 @@ import { GameLoop } from './GameLoop';
 import { GameState } from './GameState';
 import { Gamecomponent } from './GameComponent';
 import { store, GetState } from '../ui/react/store/Store';
-import { setGameState, setCrystals, setGameStartTime, setGameLevelAction, setCurrentLevelStats } from '../ui/react/store/game/GameActions';
+import { setGameState, setCrystals, setGameStartTime, setGameLevelAction, setCurrentLevelStats, setResultLevelStats } from '../ui/react/store/game/GameActions';
 import { updateLevelDataAction } from '../ui/react/store/profile/ProfileActions';
 import { ILevelData } from '../ui/react/store/profile/IProfile';
 import { SoundManager, Sound } from '../SoundManager';
@@ -109,13 +109,15 @@ export class Game {
         this.onStateChange(prevState, state);
         store.dispatch(setGameState(state));
         if (state === GameState.DEAD) {
-            const survivalTime = this._gameStartTime ? Date.now() - this._gameStartTime : 0;
+            const survivalTime = this._gameStartTime ? Math.floor((Date.now() - this._gameStartTime) / 1000) : 0;
+            const resultLevelStats: ILevelData = {
+                crystals: this.renderManager.crystals.collectedCrystalCount,
+                survivalTime
+            };
+            store.dispatch(setResultLevelStats({ ...resultLevelStats }));
             store.dispatch(updateLevelDataAction({
                 level: this.levelID,
-                data: {
-                    crystals: this.renderManager.crystals.collectedCrystalCount,
-                    survivalTime
-                }
+                data: resultLevelStats
             }));
             // SoundManager.pause(Sound.AMBIENT_BASE);
             SoundManager.getCurrentAmbient()?.pause();
@@ -123,6 +125,7 @@ export class Game {
         if (state === GameState.PRE_GAME) {
             SoundManager.removeDeathFilter();
             store.dispatch(setCrystals(0));
+            store.dispatch(setResultLevelStats(undefined));
             SoundManager.play(Sound.AMBIENT_BASE);
             SoundManager.getCurrentAmbient()?.play();
         }

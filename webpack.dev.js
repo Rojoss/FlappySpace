@@ -4,7 +4,7 @@ const Config = require('webpack-config').Config;
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-module.exports = new Config().extend('webpack.base.js').merge({
+module.exports = {
     context: path.resolve(__dirname, './src'),
     mode: 'development',
     target: 'web',
@@ -23,17 +23,21 @@ module.exports = new Config().extend('webpack.base.js').merge({
     ],
 
     resolve: {
+        modules: ['src', 'node_modules'],
+        extensions: ['.less', '.ts', '.tsx', '.js', '.jsx'],
         alias: {
             'react-dom': '@hot-loader/react-dom',
+            assets: path.resolve(__dirname, 'assets'),
         }
     },
 
     output: {
-        pathinfo: false,
         publicPath: '/',
-        path: path.resolve(__dirname, '../dist'),
+        path: path.resolve(__dirname, 'dist'),
         filename: 'flappyspace.[hash].js'
     },
+
+    devtool: 'cheap-module-eval-source-map',
 
     optimization: {
         minimize: false,
@@ -51,7 +55,7 @@ module.exports = new Config().extend('webpack.base.js').merge({
         host: 'localhost',
         port: 3333,
         disableHostCheck: true,
-        contentBase: path.resolve(__dirname, '../dist'),
+        contentBase: path.resolve(__dirname, 'dist'),
         publicPath: '/',
         historyApiFallback: true,
         stats: {
@@ -100,10 +104,25 @@ module.exports = new Config().extend('webpack.base.js').merge({
             ]
         },
         {
+            test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/,
+            loader: 'url-loader?limit=10000&mimetype=application/font-woff',
+        },
+        {
             test: /\.(gif|png|jpe?g|svg)$/i,
+            // use: [
+            //     'file-loader'
+            // ]
+            // use: [
+            //     'file-loader?name=./imgs/[hash].[ext]',
+            // ],
             use: [
-                'file-loader?name=./imgs/[hash].[ext]',
-            ],
+                {
+                    loader: 'file-loader',
+                    options: {
+                        name: '[path][name]-[contenthash].[ext]',
+                    }
+                }
+            ]
         },
         ],
     },
@@ -131,4 +150,4 @@ module.exports = new Config().extend('webpack.base.js').merge({
         // prints more readable module names in the browser console on HMR updates
         new webpack.NamedModulesPlugin(),
     ],
-});
+};

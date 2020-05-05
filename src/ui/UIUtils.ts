@@ -1,13 +1,13 @@
 export class UIUtils {
 
-    public static formatDuration(ms: number): string {
-        const hours = Math.floor(ms / 360000);
-        ms -= hours * 360000;
-        const minutes = Math.floor(ms / 60000);
-        ms -= minutes * 60000;
-        const seconds = Math.floor(ms / 1000);
+    public static formatDuration(sec: number): string {
+        sec = Math.floor(sec);
+        const hours = Math.floor(sec / 36000);
+        sec -= hours * 360000;
+        const minutes = Math.floor(sec / 6000);
+        sec -= minutes * 60000;
 
-        return `${hours > 0 ? UIUtils.addZero(hours) + ':' : ''}${UIUtils.addZero(minutes)}:${UIUtils.addZero(seconds)}`;
+        return `${hours > 0 ? UIUtils.addZero(hours) + ':' : ''}${UIUtils.addZero(minutes)}:${UIUtils.addZero(sec)}`;
     }
 
     private static addZero(value: number): String {

@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { Levels } from '../../../../levels/Levels';
 import { UIUtils } from '../../../UIUtils';
 import { ILevelData } from '../../../react/store/profile/IProfile';
+import { UIImage } from '../../../UIImage';
 
 export interface IHUDProps {
     state: GameState;
@@ -73,7 +74,7 @@ class HUD extends React.Component<IHUDProps, IState> {
             return;
         }
         this.setState({
-            timeAlive: Date.now() - this.props.startTime
+            timeAlive: Math.floor((Date.now() - this.props.startTime) / 1000)
         });
         this.timeoutID = window.setTimeout(this.update, 1000);
     }
@@ -83,7 +84,7 @@ class HUD extends React.Component<IHUDProps, IState> {
         return <div className='hud'>
             <div className='level'>{Levels.get(this.props.level).name}</div>
             <div className='crystals'>
-                <img className='crystal' src={pastRecord ? `/assets/sprites/crystal.png` : '/assets/sprites/crystal_old.png'} />
+                <img className='crystal' src={pastRecord ? UIImage.crystal : UIImage.crystalOld} />
                 <div className='value'>
                     <span className='current'>{this.props.crystals}</span>
                     {pastRecord ?

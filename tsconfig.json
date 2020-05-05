@@ -24,7 +24,10 @@
         "declaration": true,
         "preserveConstEnums": true,
         "experimentalDecorators": true,
-        "preserveSymlinks": true
+        "preserveSymlinks": true,
+        "paths": {
+            "assets/*": ["../assets/*"],
+        }
     },
     "include": [
         "src/**/*"

@@ -5,6 +5,8 @@ import { Levels } from '../../../../levels/Levels';
 import LevelTile from './LevelTile';
 import { connect } from 'react-redux';
 import { setLevelSelectVisible } from '../../../react/store/game/GameActions';
+import { UIImage } from '../../../UIImage';
+import { SoundManager, Sound } from '../../../../SoundManager';
 
 interface IProps {
     levelData: IProfileLevelData;
@@ -21,6 +23,7 @@ class LevelSelect extends React.Component<IProps, any> {
     }
 
     private close(event: any): void {
+        SoundManager.play(Sound.UI_CLICK);
         event && event.preventDefault();
         store.dispatch(setLevelSelectVisible(false));
     }
@@ -41,7 +44,7 @@ class LevelSelect extends React.Component<IProps, any> {
             <div className='content'>
                 <div className='animated-container'>
                     <div className='crystal-count'>
-                        <img className='crystal' src='/assets/sprites/crystal.png' />
+                        <img className='crystal' src={UIImage.crystal} />
                         <span className='total'><span className='value'>{totalCrystals}</span> crystals collected</span>
                     </div>
                     <div className='levels'>
