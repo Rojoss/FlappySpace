@@ -1,5 +1,5 @@
 import * as PIXI from 'pixi.js';
-import { SPRITE_PATHS, Sprite } from './Sprite';
+import { SPRITE_PATHS, SpriteID } from './Sprite';
 import { Sound } from './SoundManager';
 
 export class AssetLoader {
@@ -31,8 +31,8 @@ export class AssetLoader {
             if (!SPRITE_PATHS.hasOwnProperty(key)) {
                 continue;
             }
-            const spr: Sprite = Number(key);
-            pixiLoader.add(Sprite[spr], SPRITE_PATHS[key]);
+            const spr: SpriteID = Number(key);
+            pixiLoader.add(SpriteID[spr], SPRITE_PATHS[key]);
         }
 
         pixiLoader.load();
