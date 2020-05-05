@@ -42,9 +42,9 @@ export class SoundManager {
     private static readonly DEFAULT_FADE_DURATION: number = 1000;
 
     public static readonly VOLUME_SETTINGS: IVolumeMap = {
-        [SoundCategory.SFX]: 1,
-        [SoundCategory.MUSIC]: 0.25,
-        [SoundCategory.AMBIENT]: 0.5
+        [SoundCategory.SFX]: 0.8,
+        [SoundCategory.MUSIC]: 0.2,
+        [SoundCategory.AMBIENT]: 0.3
     };
 
     private static readonly SOUND_DATA: ISoundMap = {

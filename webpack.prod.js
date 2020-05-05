@@ -1,10 +1,9 @@
 const path = require('path');
 const webpack = require('webpack');
-const Config = require('webpack-config').Config;
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-module.exports = new Config().extend('webpack.base.js').merge({
+module.exports = {
     context: path.resolve(__dirname, './src'),
     mode: 'production',
     target: 'web',
@@ -17,6 +16,14 @@ module.exports = new Config().extend('webpack.base.js').merge({
     entry: [
         './Main.tsx'
     ],
+
+    resolve: {
+        modules: ['src', 'node_modules'],
+        extensions: ['.less', '.ts', '.tsx', '.js', '.jsx'],
+        alias: {
+            assets: path.resolve(__dirname, 'assets'),
+        }
+    },
 
     output: {
         pathinfo: false,
@@ -53,10 +60,19 @@ module.exports = new Config().extend('webpack.base.js').merge({
             ]
         },
         {
+            test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/,
+            loader: 'url-loader?limit=10000&mimetype=application/font-woff',
+        },
+        {
             test: /\.(gif|png|jpe?g|svg)$/i,
             use: [
-                'file-loader?name=./imgs/[hash].[ext]',
-            ],
+                {
+                    loader: 'file-loader',
+                    options: {
+                        name: 'assets/[name]-[contenthash].[ext]',
+                    }
+                }
+            ]
         },
         ],
     },
@@ -70,8 +86,20 @@ module.exports = new Config().extend('webpack.base.js').merge({
 
         // Copy all assets to distribution folder.
         new CopyWebpackPlugin([{
-            from: '../assets',
-            to: 'assets'
+            from: '../assets/fonts',
+            to: 'assets/fonts'
+        },
+        {
+            from: '../assets/sounds',
+            to: 'assets/sounds'
+        },
+        {
+            from: '../assets/spritesheet.json',
+            to: 'assets/'
+        },
+        {
+            from: '../assets/spritesheet.png',
+            to: 'assets/'
         },
         {
             from: '../public'
@@ -84,4 +112,4 @@ module.exports = new Config().extend('webpack.base.js').merge({
         // prints more readable module names in the browser console on HMR updates
         new webpack.NamedModulesPlugin(),
     ],
-});
+};

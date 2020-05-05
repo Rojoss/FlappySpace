@@ -20,7 +20,7 @@ export class Levels {
         },
         {
             name: 'Neptune', // Blue
-            crystalsToUnlock: 1,
+            crystalsToUnlock: 10,
             bgTopColor: '#135973',
             bgBottomClr: '#091125',
             planetBlendColor: '#5336a3',

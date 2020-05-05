@@ -109,17 +109,11 @@ module.exports = {
         },
         {
             test: /\.(gif|png|jpe?g|svg)$/i,
-            // use: [
-            //     'file-loader'
-            // ]
-            // use: [
-            //     'file-loader?name=./imgs/[hash].[ext]',
-            // ],
             use: [
                 {
                     loader: 'file-loader',
                     options: {
-                        name: '[path][name]-[contenthash].[ext]',
+                        name: 'assets/[name]-[contenthash].[ext]',
                     }
                 }
             ]
